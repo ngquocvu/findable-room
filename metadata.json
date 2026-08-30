@@ -1,0 +1,8 @@
+{
+  "name": "RoomFindable",
+  "description": "An 8-bit 3D room storage reminder application.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
