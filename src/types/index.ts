@@ -8,7 +8,17 @@ export interface Room {
   wallColor: string;
 }
 
-export type FurnitureType = 'wardrobe' | 'shelf' | 'box' | 'desk' | 'bed' | 'other';
+export type FurnitureType =
+  | 'wardrobe'
+  | 'cabinet'
+  | 'closet'
+  | 'table'
+  | 'desk'
+  | 'shelf'
+  | 'drawer'
+  | 'box'
+  | 'bed'
+  | 'fridge';
 
 export interface Furniture {
   id: string;
@@ -21,7 +31,7 @@ export interface Furniture {
   color: string;
 }
 
-export type ItemCategory = 'clothing' | 'documents' | 'electronics' | 'tools' | 'books' | 'misc';
+export type ItemCategory = 'clothing' | 'documents' | 'electronics' | 'tools' | 'books' | 'kitchenware' | 'toys' | 'misc';
 
 export interface StoredItem {
   id: string;

@@ -22,9 +22,9 @@ export function ClientApp() {
         name: 'My First Room',
         width: 5,
         depth: 5,
-        height: 3,
-        floorColor: '#d8d3c5',
-        wallColor: '#f1efe9'
+        height: 2.8,
+        floorColor: '#8B7355',
+        wallColor: '#a8b8c8',
       };
       addRoom(defaultRoom);
       setActiveRoom(defaultRoom.id);
@@ -36,7 +36,7 @@ export function ClientApp() {
   return (
     <div className="flex h-screen w-full bg-[#fdfcf9] text-[#4a4a38] overflow-hidden font-sans">
        <Sidebar />
-       <div className="flex-1 flex flex-col relative bg-[#f1efe9]">
+       <div className="flex-1 flex flex-col relative">
           <TopBar />
           <div className="flex-1 relative">
              <SceneContainer />
