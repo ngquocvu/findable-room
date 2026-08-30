@@ -41,7 +41,10 @@ export function SearchModal() {
 
   const navigateToItem = (roomId?: string, furnitureId?: string) => {
     if (roomId) setActiveRoom(roomId);
-    if (furnitureId) setActiveFurniture(furnitureId);
+    if (furnitureId) {
+      setActiveFurniture(furnitureId);
+      window.dispatchEvent(new CustomEvent('open-furniture', { detail: furnitureId }));
+    }
     setIsOpen(false);
   };
 

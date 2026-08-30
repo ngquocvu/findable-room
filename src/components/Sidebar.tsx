@@ -258,10 +258,12 @@ export function Sidebar() {
                       <div
                         key={f.id}
                         className={`p-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors ${activeFurnitureId === f.id ? 'bg-[#ece8df] text-[#4a4a38]' : 'hover:bg-[#f1eee6] text-[#6a6658]'}`}
-                        onClick={() => setActiveFurniture(f.id)}
-                        onDoubleClick={() => window.dispatchEvent(new CustomEvent('open-furniture', { detail: f.id }))}
+                        onClick={() => {
+                          setActiveFurniture(f.id);
+                          window.dispatchEvent(new CustomEvent('open-furniture', { detail: f.id }));
+                        }}
                       >
-                        <div className="flex items-center gap-2 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
                           <span className="text-base">{preset?.icon ?? '📦'}</span>
                           <span className="truncate text-sm font-medium">{f.name}</span>
                           {itemCount > 0 && (
@@ -270,12 +272,28 @@ export function Sidebar() {
                             </span>
                           )}
                         </div>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); deleteFurniture(f.id); }}
-                          className="text-[#c0bdb4] hover:text-red-400 p-1 rounded hover:bg-red-50 shrink-0 transition-colors"
-                        >
-                          <Trash2 size={13} />
-                        </button>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            title="View contents"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveFurniture(f.id);
+                              window.dispatchEvent(new CustomEvent('open-furniture', { detail: f.id }));
+                            }}
+                            className="text-[#8a8678] hover:text-[#4a4a38] text-[11px] px-2 py-1 bg-white hover:bg-[#f5f3ee] border border-[#d6d1c2] rounded-md transition-colors"
+                          >
+                            Items
+                          </button>
+                          <button
+                            type="button"
+                            title="Delete furniture"
+                            onClick={(e) => { e.stopPropagation(); deleteFurniture(f.id); }}
+                            className="text-[#c0bdb4] hover:text-red-400 p-1 rounded hover:bg-red-50 shrink-0 transition-colors"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
                       </div>
                     );
                   })}
@@ -286,9 +304,20 @@ export function Sidebar() {
             {/* Furniture Edit Panel */}
             {activeFurn && (
               <div className="mt-2 pt-4 border-t border-[#e5e1d8] flex flex-col gap-3">
-                <div className="text-[10px] font-semibold text-[#a39f90] uppercase tracking-[0.15em] flex items-center gap-1">
-                  <Settings2 size={11} /> {FURNITURE_PRESETS[activeFurn.type]?.icon} {activeFurn.type}
+                <div className="text-[10px] font-semibold text-[#a39f90] uppercase tracking-[0.15em] flex items-center justify-between">
+                  <span className="flex items-center gap-1">
+                    <Settings2 size={11} /> {FURNITURE_PRESETS[activeFurn.type]?.icon} {activeFurn.type}
+                  </span>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-furniture', { detail: activeFurn.id }))}
+                  className="w-full py-2.5 px-3 rounded-lg bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white flex items-center justify-center gap-2 text-xs font-semibold shadow-sm transition-colors"
+                >
+                  <span>📦</span> View & Manage Items ({getFurnitureItemCount(activeFurn.id)})
+                </button>
+
                 <input
                   className="bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-2 text-sm focus:border-[#8a9a5b] outline-none shadow-sm"
                   value={activeFurn.name}

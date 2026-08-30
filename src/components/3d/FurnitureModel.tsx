@@ -283,9 +283,10 @@ export function FurnitureModel({ furniture, itemCount = 0 }: { furniture: Furnit
     if (controls) {
       (controls as any).enabled = false;
     }
-    document.body.style.cursor = 'grabbing';
-    // Signal the DragController that this furniture is now being dragged
+    // Record start position for drag threshold detection
     dragState.active = true;
+    dragState.isDragging = false;
+    dragState.startPointerPos = { x: e.clientX, y: e.clientY };
     dragState.furnitureId = furniture.id;
     dragState.originalPosition = [...furniture.position] as [number, number, number];
     setActiveFurniture(furniture.id);
@@ -293,7 +294,10 @@ export function FurnitureModel({ furniture, itemCount = 0 }: { furniture: Furnit
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    setActiveFurniture(furniture.id);
+    if (!dragState.isDragging) {
+      setActiveFurniture(furniture.id);
+      window.dispatchEvent(new CustomEvent('open-furniture', { detail: furniture.id }));
+    }
   };
 
   const handleDoubleClick = (e: ThreeEvent<MouseEvent>) => {
@@ -329,13 +333,13 @@ export function FurnitureModel({ furniture, itemCount = 0 }: { furniture: Furnit
         onPointerDown={handlePointerDown}
         onPointerOver={(e) => {
           e.stopPropagation();
-          if (!dragState.active) {
-            document.body.style.cursor = 'grab';
+          if (!dragState.isDragging) {
+            document.body.style.cursor = 'pointer';
           }
         }}
         onPointerOut={(e) => {
           e.stopPropagation();
-          if (!dragState.active) {
+          if (!dragState.isDragging) {
             document.body.style.cursor = 'default';
           }
         }}

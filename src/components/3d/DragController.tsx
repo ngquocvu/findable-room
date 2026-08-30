@@ -12,12 +12,12 @@ function snapToGrid(value: number, grid: number): number {
 
 export function DragController() {
   const { camera, gl, controls } = useThree();
-  const { rooms, furniture, activeRoomId, updateFurniture } = useStore();
+  const { rooms, furniture, activeRoomId, updateFurniture, setActiveFurniture } = useStore();
 
   // Keep latest store values accessible in event handlers without re-registration
-  const storeRef = useRef({ rooms, furniture, activeRoomId, updateFurniture });
+  const storeRef = useRef({ rooms, furniture, activeRoomId, updateFurniture, setActiveFurniture });
   useFrame(() => {
-    storeRef.current = { rooms, furniture, activeRoomId, updateFurniture };
+    storeRef.current = { rooms, furniture, activeRoomId, updateFurniture, setActiveFurniture };
   });
 
   const raycaster = useRef(new THREE.Raycaster());
@@ -59,6 +59,16 @@ export function DragController() {
   useEffect(() => {
     const onPointerMove = (e: PointerEvent) => {
       if (!dragState.active || !dragState.furnitureId) return;
+
+      // Check distance threshold before entering drag mode
+      if (!dragState.isDragging) {
+        const dx = e.clientX - dragState.startPointerPos.x;
+        const dy = e.clientY - dragState.startPointerPos.y;
+        if (Math.hypot(dx, dy) < 6) {
+          return;
+        }
+        dragState.isDragging = true;
+      }
 
       // Ensure OrbitControls doesn't rotate camera while dragging
       if (controls) {
@@ -111,16 +121,26 @@ export function DragController() {
     const onPointerUp = (e: PointerEvent) => {
       if (!dragState.active && !dragState.furnitureId) return;
 
+      const furnitureId = dragState.furnitureId;
+      const wasDragging = dragState.isDragging;
+
       if (footprintRef.current) footprintRef.current.visible = false;
 
-      // Snap back if dropped on an invalid spot (collision)
-      if (!isValidDrop.current && mouseMoved.current && dragState.furnitureId) {
-        storeRef.current.updateFurniture(dragState.furnitureId, {
+      // Snap back if dropped on an invalid spot (collision) during a real drag
+      if (wasDragging && !isValidDrop.current && mouseMoved.current && furnitureId) {
+        storeRef.current.updateFurniture(furnitureId, {
           position: dragState.originalPosition,
         });
       }
 
+      // If user clicked (no movement past threshold), open the furniture contents modal
+      if (!wasDragging && furnitureId) {
+        storeRef.current.setActiveFurniture(furnitureId);
+        window.dispatchEvent(new CustomEvent('open-furniture', { detail: furnitureId }));
+      }
+
       dragState.active = false;
+      dragState.isDragging = false;
       dragState.furnitureId = null;
       mouseMoved.current = false;
       document.body.style.cursor = 'default';
@@ -134,10 +154,13 @@ export function DragController() {
     const onPointerCancel = () => {
       if (dragState.active && dragState.furnitureId) {
         if (footprintRef.current) footprintRef.current.visible = false;
-        storeRef.current.updateFurniture(dragState.furnitureId, {
-          position: dragState.originalPosition,
-        });
+        if (dragState.isDragging) {
+          storeRef.current.updateFurniture(dragState.furnitureId, {
+            position: dragState.originalPosition,
+          });
+        }
         dragState.active = false;
+        dragState.isDragging = false;
         dragState.furnitureId = null;
         mouseMoved.current = false;
         document.body.style.cursor = 'default';
