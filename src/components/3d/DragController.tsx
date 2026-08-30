@@ -11,7 +11,7 @@ function snapToGrid(value: number, grid: number): number {
 }
 
 export function DragController() {
-  const { camera, gl } = useThree();
+  const { camera, gl, controls } = useThree();
   const { rooms, furniture, activeRoomId, updateFurniture } = useStore();
 
   // Keep latest store values accessible in event handlers without re-registration
@@ -35,7 +35,7 @@ export function DragController() {
   };
 
   const checkCollision = (
-    furnitureId: string, w: number, d: number, nx: number, nz: number
+    furnitureId: string, effectiveW: number, effectiveD: number, nx: number, nz: number
   ): boolean => {
     const { rooms, furniture, activeRoomId } = storeRef.current;
     const room = rooms.find(r => r.id === activeRoomId);
@@ -43,34 +43,28 @@ export function DragController() {
     for (const other of furniture.filter(f => f.roomId === activeRoomId)) {
       if (other.id === furnitureId) continue;
       const [ow, , od] = other.dimensions;
+      const oAngle = other.rotation?.[1] || 0;
+      const oCos = Math.abs(Math.cos(oAngle));
+      const oSin = Math.abs(Math.sin(oAngle));
+      const oEffW = ow * oCos + od * oSin;
+      const oEffD = ow * oSin + od * oCos;
       const [ox, , oz] = other.position;
-      if (Math.abs(nx - ox) < (w + ow) / 2 && Math.abs(nz - oz) < (d + od) / 2) return true;
+      if (Math.abs(nx - ox) < (effectiveW + oEffW) / 2 && Math.abs(nz - oz) < (effectiveD + oEffD) / 2) {
+        return true;
+      }
     }
     return false;
   };
 
   useEffect(() => {
-    const canvas = gl.domElement;
-
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.button !== 0) return;
-      // dragState.active + dragState.furnitureId is set by FurnitureModel's onPointerDown.
-      // If a furniture was just grabbed, record originalPosition here.
-      if (!dragState.active || !dragState.furnitureId) return;
-
-      mouseMoved.current = false;
-      getNDC(e);
-      raycaster.current.setFromCamera(mouse.current, camera);
-      raycaster.current.ray.intersectPlane(dragPlane.current, intersectPoint.current);
-
-      const furn = storeRef.current.furniture.find(f => f.id === dragState.furnitureId);
-      if (furn) {
-        dragState.originalPosition = [...furn.position] as [number, number, number];
-      }
-    };
-
     const onPointerMove = (e: PointerEvent) => {
       if (!dragState.active || !dragState.furnitureId) return;
+
+      // Ensure OrbitControls doesn't rotate camera while dragging
+      if (controls) {
+        (controls as any).enabled = false;
+      }
+      document.body.style.cursor = 'grabbing';
       mouseMoved.current = true;
       getNDC(e);
 
@@ -84,19 +78,25 @@ export function DragController() {
       if (!furn || !room) return;
 
       const [w, , d] = furn.dimensions;
+      const angle = furn.rotation?.[1] || 0;
+      const cos = Math.abs(Math.cos(angle));
+      const sin = Math.abs(Math.sin(angle));
+      const effectiveW = w * cos + d * sin;
+      const effectiveD = w * sin + d * cos;
 
-      // Snap + clamp to room
+      // Snap + clamp to room bounds accounting for rotation
       let nx = snapToGrid(intersectPoint.current.x, GRID_SNAP);
       let nz = snapToGrid(intersectPoint.current.z, GRID_SNAP);
-      nx = Math.max(-room.width / 2 + w / 2, Math.min(room.width / 2 - w / 2, nx));
-      nz = Math.max(-room.depth / 2 + d / 2, Math.min(room.depth / 2 - d / 2, nz));
+      nx = Math.max(-room.width / 2 + effectiveW / 2, Math.min(room.width / 2 - effectiveW / 2, nx));
+      nz = Math.max(-room.depth / 2 + effectiveD / 2, Math.min(room.depth / 2 - effectiveD / 2, nz));
 
-      const collision = checkCollision(furn.id, w, d, nx, nz);
+      const collision = checkCollision(furn.id, effectiveW, effectiveD, nx, nz);
       isValidDrop.current = !collision;
 
-      // Show footprint
+      // Show footprint guide on the floor
       if (footprintRef.current) {
         footprintRef.current.position.set(nx, 0.025, nz);
+        footprintRef.current.rotation.set(-Math.PI / 2, 0, furn.rotation?.[1] || 0);
         footprintRef.current.scale.set(w, d, 1);
         (footprintRef.current.material as THREE.MeshBasicMaterial).color.setHex(
           isValidDrop.current ? 0x57cc99 : 0xe63946
@@ -104,18 +104,17 @@ export function DragController() {
         footprintRef.current.visible = true;
       }
 
-      // Live update for smooth feedback
+      // Live update for immediate feedback
       updateFurniture(furn.id, { position: [nx, 0, nz] });
     };
 
     const onPointerUp = (e: PointerEvent) => {
-      if (e.button !== 0) return;
-      if (!dragState.active || !dragState.furnitureId) return;
+      if (!dragState.active && !dragState.furnitureId) return;
 
       if (footprintRef.current) footprintRef.current.visible = false;
 
-      // Snap back if invalid drop
-      if (!isValidDrop.current && mouseMoved.current) {
+      // Snap back if dropped on an invalid spot (collision)
+      if (!isValidDrop.current && mouseMoved.current && dragState.furnitureId) {
         storeRef.current.updateFurniture(dragState.furnitureId, {
           position: dragState.originalPosition,
         });
@@ -123,17 +122,43 @@ export function DragController() {
 
       dragState.active = false;
       dragState.furnitureId = null;
+      mouseMoved.current = false;
+      document.body.style.cursor = 'default';
+
+      // Re-enable OrbitControls after drag finishes
+      if (controls) {
+        (controls as any).enabled = true;
+      }
     };
 
-    canvas.addEventListener('pointerdown', onPointerDown);
-    canvas.addEventListener('pointermove', onPointerMove);
-    canvas.addEventListener('pointerup', onPointerUp);
-    return () => {
-      canvas.removeEventListener('pointerdown', onPointerDown);
-      canvas.removeEventListener('pointermove', onPointerMove);
-      canvas.removeEventListener('pointerup', onPointerUp);
+    const onPointerCancel = () => {
+      if (dragState.active && dragState.furnitureId) {
+        if (footprintRef.current) footprintRef.current.visible = false;
+        storeRef.current.updateFurniture(dragState.furnitureId, {
+          position: dragState.originalPosition,
+        });
+        dragState.active = false;
+        dragState.furnitureId = null;
+        mouseMoved.current = false;
+        document.body.style.cursor = 'default';
+        if (controls) {
+          (controls as any).enabled = true;
+        }
+      }
     };
-  }, [gl, camera]);
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerCancel);
+    window.addEventListener('blur', onPointerCancel);
+
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerCancel);
+      window.removeEventListener('blur', onPointerCancel);
+    };
+  }, [gl, camera, controls]);
 
   return (
     <>

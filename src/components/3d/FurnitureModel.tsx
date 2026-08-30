@@ -2,7 +2,7 @@
 import { useRef, useMemo } from 'react';
 import { useStore } from '@/src/store/useStore';
 import { Furniture } from '@/src/types';
-import { ThreeEvent, useFrame } from '@react-three/fiber';
+import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 import { dragState } from '@/src/lib/dragState';
 import * as THREE from 'three';
 
@@ -248,6 +248,7 @@ function ItemBadge({ x, h, z, count }: { x: number; h: number; z: number; count:
 
 // ── Main component ───────────────────────────────────────
 export function FurnitureModel({ furniture, itemCount = 0 }: { furniture: Furniture; itemCount?: number }) {
+  const { controls } = useThree();
   const { activeFurnitureId, setActiveFurniture } = useStore();
   const isActive = activeFurnitureId === furniture.id;
   const groupRef = useRef<THREE.Group>(null);
@@ -279,6 +280,10 @@ export function FurnitureModel({ furniture, itemCount = 0 }: { furniture: Furnit
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation(); // prevent OrbitControls from starting orbit
+    if (controls) {
+      (controls as any).enabled = false;
+    }
+    document.body.style.cursor = 'grabbing';
     // Signal the DragController that this furniture is now being dragged
     dragState.active = true;
     dragState.furnitureId = furniture.id;
@@ -322,6 +327,18 @@ export function FurnitureModel({ furniture, itemCount = 0 }: { furniture: Furnit
         position={[x, 0, z]}
         rotation={furniture.rotation}
         onPointerDown={handlePointerDown}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          if (!dragState.active) {
+            document.body.style.cursor = 'grab';
+          }
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation();
+          if (!dragState.active) {
+            document.body.style.cursor = 'default';
+          }
+        }}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
       >

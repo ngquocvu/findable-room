@@ -1,10 +1,11 @@
 "use client";
 
 import { useStore } from '@/src/store/useStore';
-import { Plus, Trash2, Settings2, FolderDown, FolderUp, ChevronDown, ChevronRight } from 'lucide-react';
+import { Plus, Trash2, Settings2, FolderDown, FolderUp, ChevronDown, ChevronRight, Sparkles } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useRef } from 'react';
 import { FURNITURE_PRESET_LIST, FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
+import { getDemoData } from '@/src/lib/demoData';
 import { FurnitureType } from '@/src/types';
 
 export function Sidebar() {
@@ -151,12 +152,21 @@ export function Sidebar() {
                   </div>
                 );
               })}
-              <button
-                onClick={handleAddRoom}
-                className="mt-1 p-2.5 rounded-lg border border-dashed border-[#d6d1c2] text-[#a39f90] hover:text-[#8a9a5b] hover:border-[#8a9a5b] hover:bg-[#f5f3ee] flex items-center justify-center gap-2 text-sm transition-colors"
-              >
-                <Plus size={14} /> New Room
-              </button>
+              <div className="flex gap-2 mt-1">
+                <button
+                  onClick={handleAddRoom}
+                  className="flex-1 p-2.5 rounded-lg border border-dashed border-[#d6d1c2] text-[#a39f90] hover:text-[#8a9a5b] hover:border-[#8a9a5b] hover:bg-[#f5f3ee] flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors"
+                >
+                  <Plus size={13} /> New Room
+                </button>
+                <button
+                  onClick={() => importData(getDemoData())}
+                  title="Load sample room with furniture & items"
+                  className="px-3 p-2.5 rounded-lg border border-[#d6d1c2] text-[#7a8c4b] hover:text-[#5f6f36] hover:border-[#8a9a5b] bg-white hover:bg-[#f2f6ee] flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors shadow-xs"
+                >
+                  <Sparkles size={12} className="text-[#8a9a5b]" /> Demo
+                </button>
+              </div>
             </div>
 
             {/* Room edit panel */}
