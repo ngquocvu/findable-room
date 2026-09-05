@@ -218,29 +218,88 @@ function Fridge({ w, h, d, color }: { w: number; h: number; d: number; color: st
 function ItemBadge({ x, h, z, count }: { x: number; h: number; z: number; count: number }) {
   const texture = useMemo(() => {
     const canvas = document.createElement('canvas');
-    canvas.width = 128;
-    canvas.height = 48;
+    canvas.width = 256;
+    canvas.height = 96;
     const ctx = canvas.getContext('2d')!;
-    ctx.imageSmoothingEnabled = false;
-    ctx.fillStyle = '#f7d354';
-    ctx.fillRect(0, 0, 128, 48);
-    ctx.fillStyle = '#0f0f1a';
-    ctx.fillRect(2, 2, 124, 44);
-    ctx.fillStyle = '#f7d354';
-    ctx.fillRect(4, 4, 120, 40);
-    ctx.fillStyle = '#0f0f1a';
-    ctx.font = 'bold 20px monospace';
-    ctx.textAlign = 'center';
+
+    // Transparent background
+    ctx.clearRect(0, 0, 256, 96);
+    ctx.imageSmoothingEnabled = true;
+
+    // Draw rounded pill badge (Sage/Olive matching app theme #6f7e45)
+    const pillX = 16;
+    const pillY = 16;
+    const pillW = 224;
+    const pillH = 64;
+    const pillR = 32;
+
+    ctx.beginPath();
+    ctx.moveTo(pillX + pillR, pillY);
+    ctx.lineTo(pillX + pillW - pillR, pillY);
+    ctx.quadraticCurveTo(pillX + pillW, pillY, pillX + pillW, pillY + pillR);
+    ctx.lineTo(pillX + pillW, pillY + pillH - pillR);
+    ctx.quadraticCurveTo(pillX + pillW, pillY + pillH, pillX + pillW - pillR, pillY + pillH);
+    ctx.lineTo(pillX + pillR, pillY + pillH);
+    ctx.quadraticCurveTo(pillX, pillY + pillH, pillX, pillY + pillH - pillR);
+    ctx.lineTo(pillX, pillY + pillR);
+    ctx.quadraticCurveTo(pillX, pillY, pillX + pillR, pillY);
+    ctx.closePath();
+
+    // Fill with sage green
+    ctx.fillStyle = '#6f7e45';
+    ctx.fill();
+
+    // White border matching app badge styling
+    ctx.lineWidth = 3.5;
+    ctx.strokeStyle = '#ffffff';
+    ctx.stroke();
+
+    // Calculate dynamic centering for box icon + count text
+    const text = `${count}`;
+    ctx.font = 'bold 32px -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif';
+    const textMetrics = ctx.measureText(text);
+    const textWidth = textMetrics.width;
+    const iconSize = 22;
+    const gap = 12;
+    const totalContentWidth = iconSize + gap + textWidth;
+    const startX = (canvas.width - totalContentWidth) / 2;
+    const centerY = pillY + pillH / 2;
+
+    // Draw clean vector box icon (no emoji)
+    const boxX = startX;
+    const boxY = centerY - iconSize / 2;
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.strokeRect(boxX, boxY, iconSize, iconSize);
+
+    // Box lid line
+    ctx.beginPath();
+    ctx.moveTo(boxX, boxY + 7);
+    ctx.lineTo(boxX + iconSize, boxY + 7);
+    ctx.stroke();
+
+    // Box handle
+    ctx.beginPath();
+    ctx.moveTo(boxX + 7, boxY + 14);
+    ctx.lineTo(boxX + iconSize - 7, boxY + 14);
+    ctx.stroke();
+
+    // Draw text
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(`📦 ${count}`, 64, 26);
+    ctx.fillText(text, boxX + iconSize + gap, centerY + 1);
+
     const tex = new THREE.CanvasTexture(canvas);
-    tex.magFilter = THREE.NearestFilter;
-    tex.minFilter = THREE.NearestFilter;
+    tex.magFilter = THREE.LinearFilter;
+    tex.minFilter = THREE.LinearFilter;
     return tex;
   }, [count]);
 
   return (
-    <sprite position={[x, h + 0.45, z]} scale={[0.9, 0.36, 1]}>
+    <sprite position={[x, h + 0.42, z]} scale={[0.8, 0.3, 1]}>
       <spriteMaterial map={texture} transparent />
     </sprite>
   );

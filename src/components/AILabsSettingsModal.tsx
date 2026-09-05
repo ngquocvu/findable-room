@@ -7,6 +7,7 @@ import { useFeatureFlags } from '@/src/store/useFeatureFlags';
 import { useStore } from '@/src/store/useStore';
 import { getTranslation } from '@/src/lib/translations';
 import type { FeatureFlagKey, AIProvider } from '@/src/lib/featureFlags';
+import { checkChromeAISupport, benchmarkChromeAI, type ChromeAIFeatureStatus } from '@/src/lib/browserAI';
 
 interface FlagInfo {
   key: FeatureFlagKey;
@@ -47,20 +48,33 @@ export function AILabsSettingsModal() {
     removeManualApiKey,
   } = useFeatureFlags();
 
-  const [inputKey, setInputKey] = useState('');
+  const [inputKey, setInputKey] = useState(manualApiKey);
   const [showKey, setShowKey] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
+
+  // Chrome Built-in AI diagnostics state
+  const [chromeStatus, setChromeStatus] = useState<ChromeAIFeatureStatus>({
+    promptAPI: 'no',
+    summarizerAPI: false,
+    translatorAPI: false,
+    writerAPI: false,
+    languageDetectorAPI: false,
+  });
+  const [benchmarking, setBenchmarking] = useState(false);
+  const [benchmarkResult, setBenchmarkResult] = useState<{ success: boolean; latencyMs: number; error?: string } | null>(null);
+  const [refreshingAI, setRefreshingAI] = useState(false);
 
   const { language } = useStore();
   const t = getTranslation(language);
 
   useEffect(() => {
     detectBrowserAI();
-    setInputKey(manualApiKey);
+    checkChromeAISupport().then(setChromeStatus);
 
     const handleOpen = () => {
       detectBrowserAI();
       setInputKey(useFeatureFlags.getState().manualApiKey);
+      checkChromeAISupport().then(setChromeStatus);
       setIsOpen(true);
     };
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -234,14 +248,153 @@ export function AILabsSettingsModal() {
                 </a>
               </section>
 
-              {/* Browser AI status card */}
-              <div className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-medium ${
-                browserAIAvailable
-                  ? 'bg-[#f0f5ee] border border-[#d8e2cb] text-[#4a572c]'
-                  : 'bg-[#f9f7f2] border border-[#e5e1d8] text-[#8a8678]'
-              }`}>
-                <span>{browserAIAvailable ? t.aiLabs.browserAvailable : t.aiLabs.browserUnavailable}</span>
-              </div>
+              {/* Chrome Built-in AI Diagnostics Section */}
+              <section className="bg-white border border-[#e5e1d8] rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col gap-3.5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Monitor size={16} className="text-[#6f7e45]" aria-hidden="true" />
+                    <div>
+                      <h3 className="text-xs font-bold text-[#4a4a38] uppercase tracking-wider">
+                        {t.aiLabs.chromeAITitle}
+                      </h3>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setRefreshingAI(true);
+                      const status = await checkChromeAISupport();
+                      setChromeStatus(status);
+                      detectBrowserAI();
+                      setRefreshingAI(false);
+                    }}
+                    className="text-[11px] text-[#8a9a5b] hover:text-[#6f7e45] font-semibold hover:underline"
+                  >
+                    {refreshingAI ? '...' : (language === 'vi' ? 'Quét lại' : 'Rescan')}
+                  </button>
+                </div>
+
+                <p className="text-xs text-[#8a8678] leading-relaxed">
+                  {t.aiLabs.chromeAISubtitle}
+                </p>
+
+                {/* Status Grid */}
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  {/* Prompt API (Nano) */}
+                  <div className="p-2.5 rounded-xl border border-[#e5e1d8] bg-[#fdfcf9] flex flex-col gap-1">
+                    <span className="text-[11px] text-[#8a8678] font-medium">{t.aiLabs.promptAPI}</span>
+                    <span className={`inline-flex items-center gap-1 font-semibold text-[11px] px-2 py-0.5 rounded-md w-fit ${
+                      chromeStatus.promptAPI === 'readily'
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        : chromeStatus.promptAPI === 'after-download'
+                        ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                        : 'bg-[#f1eee6] text-[#8a8678]'
+                    }`}>
+                      {chromeStatus.promptAPI === 'readily'
+                        ? t.aiLabs.statusReady
+                        : chromeStatus.promptAPI === 'after-download'
+                        ? t.aiLabs.statusDownloading
+                        : t.aiLabs.statusUnsupported}
+                    </span>
+                  </div>
+
+                  {/* Summarizer API */}
+                  <div className="p-2.5 rounded-xl border border-[#e5e1d8] bg-[#fdfcf9] flex flex-col gap-1">
+                    <span className="text-[11px] text-[#8a8678] font-medium">{t.aiLabs.summarizerAPI}</span>
+                    <span className={`inline-flex items-center gap-1 font-semibold text-[11px] px-2 py-0.5 rounded-md w-fit ${
+                      chromeStatus.summarizerAPI
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        : 'bg-[#f1eee6] text-[#8a8678]'
+                    }`}>
+                      {chromeStatus.summarizerAPI ? t.aiLabs.statusReady : t.aiLabs.statusUnsupported}
+                    </span>
+                  </div>
+
+                  {/* Translator API */}
+                  <div className="p-2.5 rounded-xl border border-[#e5e1d8] bg-[#fdfcf9] flex flex-col gap-1">
+                    <span className="text-[11px] text-[#8a8678] font-medium">{t.aiLabs.translatorAPI}</span>
+                    <span className={`inline-flex items-center gap-1 font-semibold text-[11px] px-2 py-0.5 rounded-md w-fit ${
+                      chromeStatus.translatorAPI
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        : 'bg-[#f1eee6] text-[#8a8678]'
+                    }`}>
+                      {chromeStatus.translatorAPI ? t.aiLabs.statusReady : t.aiLabs.statusUnsupported}
+                    </span>
+                  </div>
+
+                  {/* Writer / Rewriter API */}
+                  <div className="p-2.5 rounded-xl border border-[#e5e1d8] bg-[#fdfcf9] flex flex-col gap-1">
+                    <span className="text-[11px] text-[#8a8678] font-medium">{t.aiLabs.writerAPI}</span>
+                    <span className={`inline-flex items-center gap-1 font-semibold text-[11px] px-2 py-0.5 rounded-md w-fit ${
+                      chromeStatus.writerAPI
+                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        : 'bg-[#f1eee6] text-[#8a8678]'
+                    }`}>
+                      {chromeStatus.writerAPI ? t.aiLabs.statusReady : t.aiLabs.statusUnsupported}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Benchmark On-Device AI */}
+                <div className="flex flex-col gap-2 pt-1 border-t border-[#f1eee6]">
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      type="button"
+                      disabled={benchmarking || chromeStatus.promptAPI === 'no'}
+                      onClick={async () => {
+                        setBenchmarking(true);
+                        setBenchmarkResult(null);
+                        const res = await benchmarkChromeAI();
+                        setBenchmarkResult(res);
+                        setBenchmarking(false);
+                      }}
+                      className="px-3 py-2 bg-[#f0f5ee] hover:bg-[#e4eedf] border border-[#d8e2cb] text-[#4a572c] disabled:opacity-50 disabled:cursor-not-allowed rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5"
+                    >
+                      <Zap size={13} className="text-[#6f7e45]" />
+                      <span>{benchmarking ? t.aiLabs.testRunning : t.aiLabs.testAISpeedBtn}</span>
+                    </button>
+
+                    <a
+                      href="https://developer.chrome.com/docs/ai/built-in"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-[#8a8678] hover:text-[#4a4a38] hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>Docs Chrome AI</span>
+                      <ExternalLink size={10} />
+                    </a>
+                  </div>
+
+                  {benchmarkResult && (
+                    <div className={`p-2.5 rounded-xl text-xs flex items-center gap-2 ${
+                      benchmarkResult.success
+                        ? 'bg-emerald-50 border border-emerald-200 text-emerald-800 font-medium'
+                        : 'bg-amber-50 border border-amber-200 text-amber-800'
+                    }`}>
+                      {benchmarkResult.success ? (
+                        <>
+                          <Check size={14} className="shrink-0 text-emerald-600" />
+                          <span>{t.aiLabs.testSuccess.replace('{{ms}}', String(benchmarkResult.latencyMs))}</span>
+                        </>
+                      ) : (
+                        <span>{t.aiLabs.testFailed} ({benchmarkResult.error})</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Flags helper tip */}
+                <details className="text-[11px] text-[#8a8678] cursor-pointer">
+                  <summary className="hover:text-[#4a4a38] font-medium select-none">
+                    {t.aiLabs.chromeFlagGuide}
+                  </summary>
+                  <div className="mt-2 p-2.5 bg-[#f9f7f2] rounded-xl border border-[#e5e1d8] flex flex-col gap-1 text-[11px] leading-relaxed">
+                    <p>1. Mở tab mới và dán vào thanh địa chỉ: <code className="bg-white px-1.5 py-0.5 rounded border border-[#d6d1c2] font-mono text-[10px]">chrome://flags/#prompt-api-for-gemini-nano</code> &rarr; chọn <b>Enabled</b>.</p>
+                    <p>2. Dán: <code className="bg-white px-1.5 py-0.5 rounded border border-[#d6d1c2] font-mono text-[10px]">chrome://flags/#optimization-guide-on-device-model</code> &rarr; chọn <b>Enabled BypassPrefRequirement</b>.</p>
+                    <p>3. Bấm <b>Relaunch</b> để khởi động lại Chrome và trải nghiệm AI cục bộ không tốn phí.</p>
+                  </div>
+                </details>
+              </section>
 
               {/* Provider selector */}
               <section>

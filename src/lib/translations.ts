@@ -77,6 +77,17 @@ export interface TranslationDictionary {
     typeToSearch: string;
     noResults: string;
     clearBtn: string;
+    tabKeyword: string;
+    tabSemantic: string;
+    askAiPlaceholder: string;
+    askAiBtn: string;
+    thinking: string;
+    sourceOnDevice: string;
+    sourceCloud: string;
+    flyToIn3D: string;
+    noAiMatch: string;
+    quickPromptsLabel: string;
+    quickPrompts: string[];
   };
   welcomeModal: {
     smartInventoryBadge: string;
@@ -243,6 +254,21 @@ export interface TranslationDictionary {
     apiKeyStatusEnv: string;
     apiKeyStatusNone: string;
     apiKeyGetFree: string;
+    chromeAITitle: string;
+    chromeAISubtitle: string;
+    promptAPI: string;
+    summarizerAPI: string;
+    translatorAPI: string;
+    writerAPI: string;
+    languageDetectorAPI: string;
+    statusReady: string;
+    statusDownloading: string;
+    statusUnsupported: string;
+    testAISpeedBtn: string;
+    testRunning: string;
+    testSuccess: string;
+    testFailed: string;
+    chromeFlagGuide: string;
   };
 }
 
@@ -344,6 +370,17 @@ export const translations: Record<Language, TranslationDictionary> = {
       typeToSearch: 'Nhập từ khoá để bắt đầu tìm đồ...',
       noResults: 'Không tìm thấy món đồ nào phù hợp.',
       clearBtn: 'Xoá',
+      tabKeyword: 'Bộ lọc từ khóa',
+      tabSemantic: 'Hỏi đáp AI vị trí',
+      askAiPlaceholder: 'Hỏi tự nhiên... Ví dụ: "Đồ đi mưa để ở đâu?", "Tìm sạc dự phòng", "Tôi bị cảm có thuốc không?"',
+      askAiBtn: 'Hỏi AI',
+      thinking: 'AI đang phân tích sơ đồ đồ đạc và vị trí...',
+      sourceOnDevice: 'Gemini Nano (Cục bộ offline)',
+      sourceCloud: 'Gemini Flash (Đám mây)',
+      flyToIn3D: 'Di chuyển tới vị trí trong phòng 3D',
+      noAiMatch: 'Không tìm thấy đồ đạc phù hợp với câu hỏi này trong phòng.',
+      quickPromptsLabel: 'Câu hỏi gợi ý nhanh:',
+      quickPrompts: ['Hộ chiếu & giấy tờ', 'Sạc laptop', 'Áo khoác', 'Dụng cụ sửa chữa'],
     },
     welcomeModal: {
       smartInventoryBadge: 'Bản đồ phòng & Quản lý đồ 3D thông minh',
@@ -510,6 +547,21 @@ export const translations: Record<Language, TranslationDictionary> = {
       apiKeyStatusEnv: 'Đang dùng từ tệp cấu hình (.env)',
       apiKeyStatusNone: 'Chưa thiết lập',
       apiKeyGetFree: 'Lấy API Key miễn phí tại Google AI Studio →',
+      chromeAITitle: 'Tình trạng Chrome Built-in AI',
+      chromeAISubtitle: 'Kiểm tra các mô hình AI chạy cục bộ 100% trên trình duyệt (Gemini Nano & Expert Models)',
+      promptAPI: 'Prompt API (Gemini Nano)',
+      summarizerAPI: 'Summarizer API',
+      translatorAPI: 'Translator API',
+      writerAPI: 'Writer / Rewriter API',
+      languageDetectorAPI: 'Language Detector API',
+      statusReady: 'Sẵn sàng',
+      statusDownloading: 'Đang tải model...',
+      statusUnsupported: 'Chưa bật / Không hỗ trợ',
+      testAISpeedBtn: 'Kiểm tra tốc độ On-Device',
+      testRunning: 'Đang kiểm tra...',
+      testSuccess: 'Hoàn thành trong {{ms}}ms (100% on-device, 0 cost)',
+      testFailed: 'Kiểm tra thất bại hoặc Prompt API chưa được bật',
+      chromeFlagGuide: 'Cách bật Chrome Built-in AI trong chrome://flags',
     },
   },
   en: {
@@ -609,6 +661,17 @@ export const translations: Record<Language, TranslationDictionary> = {
       typeToSearch: 'Type to start searching...',
       noResults: 'No items found.',
       clearBtn: 'Clear',
+      tabKeyword: 'Keyword Filter',
+      tabSemantic: 'Ask AI Spatial Q&A',
+      askAiPlaceholder: 'Ask naturally... E.g. "Where are my rain clothes?", "Find laptop charger", "Any winter jackets?"',
+      askAiBtn: 'Ask AI',
+      thinking: 'AI is analyzing inventory and 3D locations...',
+      sourceOnDevice: 'Gemini Nano (On-Device Offline)',
+      sourceCloud: 'Gemini Flash (Cloud)',
+      flyToIn3D: 'Fly to location in 3D',
+      noAiMatch: 'No matching items found in the current room.',
+      quickPromptsLabel: 'Quick questions:',
+      quickPrompts: ['Passport & Documents', 'Laptop charger', 'Winter coats', 'Hand tools'],
     },
     welcomeModal: {
       smartInventoryBadge: 'Smart 3D Room & Inventory Map',
@@ -775,6 +838,21 @@ export const translations: Record<Language, TranslationDictionary> = {
       apiKeyStatusEnv: 'Using from Environment (.env)',
       apiKeyStatusNone: 'Not Configured',
       apiKeyGetFree: 'Get a free API Key at Google AI Studio →',
+      chromeAITitle: 'Chrome Built-in AI Status',
+      chromeAISubtitle: 'Check 100% on-device local AI models in Chrome (Gemini Nano & Expert Models)',
+      promptAPI: 'Prompt API (Gemini Nano)',
+      summarizerAPI: 'Summarizer API',
+      translatorAPI: 'Translator API',
+      writerAPI: 'Writer / Rewriter API',
+      languageDetectorAPI: 'Language Detector API',
+      statusReady: 'Ready',
+      statusDownloading: 'Downloading model...',
+      statusUnsupported: 'Unsupported / Disabled',
+      testAISpeedBtn: 'Benchmark On-Device Speed',
+      testRunning: 'Benchmarking...',
+      testSuccess: 'Finished in {{ms}}ms (100% on-device, zero cost)',
+      testFailed: 'Benchmark failed or Prompt API not enabled',
+      chromeFlagGuide: 'How to enable Chrome Built-in AI in chrome://flags',
     },
   },
 };

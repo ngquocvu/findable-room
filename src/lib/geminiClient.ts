@@ -6,7 +6,8 @@
 import { GoogleGenAI } from '@google/genai';
 
 /** Model to use — configurable via env so no code changes needed to swap. */
-export const GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.0-flash-lite';
+export const GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-3.5-flash-lite';
+export const FALLBACK_MODELS = ['gemini-2.5-flash-lite', 'gemini-1.5-flash'];
 
 let _client: GoogleGenAI | null = null;
 
@@ -64,14 +65,14 @@ export async function generateStructuredJSON<T>(opts: GeminiGenerateOptions): Pr
     generationConfig.responseSchema = opts.responseSchema;
   }
 
-  const attempt = async () => {
+  const callModel = async (modelName: string) => {
     const response = await client.models.generateContent({
-      model: GEMINI_MODEL,
+      model: modelName,
       contents: [{ role: 'user', parts }],
       config: generationConfig,
     });
     const text = response.text?.trim() ?? '';
-    if (!text) throw new Error('Empty response from Gemini');
+    if (!text) throw new Error(`Empty response from Gemini model ${modelName}`);
     try {
       return JSON.parse(text) as T;
     } catch {
@@ -82,11 +83,28 @@ export async function generateStructuredJSON<T>(opts: GeminiGenerateOptions): Pr
     }
   };
 
-  try {
-    return await attempt();
-  } catch (err) {
-    // Single retry for transient errors
-    console.warn('[geminiClient] Retrying after error:', err);
-    return await attempt();
+  const modelsToTry = [GEMINI_MODEL, ...FALLBACK_MODELS.filter(m => m !== GEMINI_MODEL)];
+
+  let lastError: any = null;
+  for (const model of modelsToTry) {
+    try {
+      return await callModel(model);
+    } catch (err: any) {
+      lastError = err;
+      const isNotFound = err?.status === 404 || err?.message?.includes('not found') || err?.message?.includes('is not supported');
+      if (isNotFound) {
+        console.warn(`[geminiClient] Model ${model} not available, trying next fallback...`);
+        continue;
+      }
+      // For transient errors on the current model, retry once
+      try {
+        console.warn(`[geminiClient] Retrying model ${model} after transient error:`, err);
+        return await callModel(model);
+      } catch (retryErr) {
+        lastError = retryErr;
+      }
+    }
   }
+
+  throw lastError;
 }

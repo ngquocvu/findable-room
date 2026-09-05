@@ -1,7 +1,7 @@
 "use client";
 
 import { useStore } from '@/src/store/useStore';
-import { Plus, Trash2, Settings2, FolderDown, FolderUp, ChevronDown, ChevronRight, Sparkles, QrCode, X, Camera } from 'lucide-react';
+import { Plus, Trash2, Settings2, FolderDown, FolderUp, ChevronDown, ChevronRight, Sparkles, QrCode, X, Camera, Box } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useRef, useEffect } from 'react';
 import { FURNITURE_PRESET_LIST, FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
@@ -9,6 +9,7 @@ import { getDemoData } from '@/src/lib/demoData';
 import { FurnitureType } from '@/src/types';
 import { getTranslation } from '@/src/lib/translations';
 import { useFeatureFlags } from '@/src/store/useFeatureFlags';
+import { FurnitureIcon } from '@/src/components/FurnitureIcon';
 
 export function Sidebar() {
   const store = useStore();
@@ -330,7 +331,7 @@ export function Sidebar() {
                           onClick={() => handleAddFurnitureType(preset.id)}
                           className="flex items-center gap-2 px-2.5 py-2 bg-white hover:bg-[#f5f3ee] border border-[#e5e1d8] hover:border-[#8a9a5b] rounded-lg transition-all group shadow-2xs text-left"
                         >
-                          <span className="text-lg shrink-0">{preset.icon}</span>
+                          <FurnitureIcon type={preset.id} size={18} className="text-[#6f7e45] shrink-0" />
                           <span className="text-xs font-medium text-[#4a4a38] group-hover:text-[#8a9a5b] transition-colors truncate">
                             {t.furniturePresets[preset.id]?.label || preset.label}
                           </span>
@@ -365,7 +366,6 @@ export function Sidebar() {
                   )}
                   {activeRoomFurniture.map(f => {
                     const itemCount = getFurnitureItemCount(f.id);
-                    const preset = FURNITURE_PRESETS[f.type];
                     return (
                       <div
                         key={f.id}
@@ -391,7 +391,7 @@ export function Sidebar() {
                         title={t.sidebar.viewItems}
                       >
                         <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                          <span className="text-lg shrink-0" aria-hidden="true">{preset?.icon ?? '📦'}</span>
+                          <FurnitureIcon type={f.type} size={18} className="text-[#6f7e45] shrink-0" aria-hidden="true" />
                           <span className="truncate text-sm font-semibold text-[#4a4a38]">{f.name}</span>
                           {itemCount > 0 && (
                             <span
@@ -436,8 +436,8 @@ export function Sidebar() {
             {activeFurn && (
               <div className="mt-2 pt-4 border-t border-[#e5e1d8] flex flex-col gap-3">
                 <div className="text-[10px] font-semibold text-[#a39f90] uppercase tracking-[0.15em] flex items-center justify-between">
-                  <span className="flex items-center gap-1">
-                    <Settings2 size={11} aria-hidden="true" /> {FURNITURE_PRESETS[activeFurn.type]?.icon} {t.furniturePresets[activeFurn.type]?.label || activeFurn.type}
+                  <span className="flex items-center gap-1.5">
+                    <Settings2 size={11} aria-hidden="true" /> <FurnitureIcon type={activeFurn.type} size={12} className="text-[#6f7e45]" aria-hidden="true" /> {t.furniturePresets[activeFurn.type]?.label || activeFurn.type}
                   </span>
                   <button
                     type="button"
@@ -457,7 +457,7 @@ export function Sidebar() {
                     aria-label={`${t.sidebar.viewItems} (${getFurnitureItemCount(activeFurn.id)})`}
                     className="flex-1 py-2 px-3 rounded-lg bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white flex items-center justify-center gap-1.5 text-xs font-semibold shadow-sm transition-colors"
                   >
-                    <span aria-hidden="true">📦</span> {t.sidebar.viewItems} ({getFurnitureItemCount(activeFurn.id)})
+                    <Box size={14} aria-hidden="true" /> {t.sidebar.viewItems} ({getFurnitureItemCount(activeFurn.id)})
                   </button>
                   <button
                     type="button"

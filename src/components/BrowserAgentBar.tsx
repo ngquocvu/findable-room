@@ -161,10 +161,10 @@ export function BrowserAgentBar() {
             exit={{ opacity: 0, y: 10 }}
             className="mb-2 bg-white border border-[#e5e1d8] rounded-2xl shadow-lg p-4 text-sm"
           >
-            <p className="font-semibold text-[#4a4a38] mb-2">✨ {plan.summary}</p>
+            <p className="font-semibold text-[#4a4a38] mb-2">{plan.summary}</p>
             {plan.actions.map((a, i) => (
               <div key={i} className="flex items-start gap-2 text-[#8a8678] text-xs mb-1">
-                <ChevronRight size={12} className="shrink-0 mt-0.5 text-[#4a7c59]" />
+                <ChevronRight size={12} className="shrink-0 mt-0.5 text-[#6f7e45]" />
                 {a.description}
               </div>
             ))}
@@ -211,8 +211,18 @@ export function BrowserAgentBar() {
                   .replace('{{total}}', String(plan?.actions.length ?? executingStep))}
               </span>
             )}
-            {agentState === 'done' && `✅ ${t.agentBar.doneMessage} ${results.join(' · ')}`}
-            {agentState === 'error' && `❌ ${errorMsg || t.agentBar.errorMessage}`}
+            {agentState === 'done' && (
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 size={13} className="text-green-600" />
+                {t.agentBar.doneMessage} {results.join(' · ')}
+              </span>
+            )}
+            {agentState === 'error' && (
+              <span className="flex items-center gap-1.5">
+                <XCircle size={13} className="text-red-500" />
+                {errorMsg || t.agentBar.errorMessage}
+              </span>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

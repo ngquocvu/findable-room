@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   X, Camera, Upload, RotateCcw, CheckCircle2, AlertCircle,
-  ChevronRight, Loader2, Info, KeyRound, Eye, EyeOff, ExternalLink, Check
+  ChevronRight, Loader2, Info, KeyRound, Eye, EyeOff, ExternalLink, Check, Box
 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useStore } from '@/src/store/useStore';
@@ -576,7 +576,7 @@ export function ImageToRoomModal() {
                                 className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-lg shadow-2xs"
                                 style={{ backgroundColor: f.color + '33' }}
                               >
-                                {preset?.icon ?? '📦'}
+                                <Box size={16} className="text-[#6f7e45]" />
                               </div>
                               <div className="min-w-0 flex-1">
                                 <p className="text-sm font-semibold text-[#4a4a38] truncate">{f.name}</p>

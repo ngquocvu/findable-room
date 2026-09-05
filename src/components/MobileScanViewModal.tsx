@@ -5,20 +5,21 @@ import { useStore } from '@/src/store/useStore';
 import { ContainerSnapshot, parseContainerDeepLink } from '@/src/lib/qrCode';
 import { FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
 import { FurnitureType, ItemCategory, StoredItem } from '@/src/types';
-import { X, Search, MapPin, Eye, Download, Check, Plus, Tag } from 'lucide-react';
+import { X, Search, MapPin, Eye, Download, Check, Plus, Tag, Shirt, FileText, Zap, Wrench, Book, Utensils, Gamepad2, Package } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { v4 as uuidv4 } from 'uuid';
 import { getTranslation } from '@/src/lib/translations';
+import { FurnitureIcon } from '@/src/components/FurnitureIcon';
 
-const CATEGORY_ICONS: Record<string, string> = {
-  clothing: '👕',
-  documents: '📄',
-  electronics: '🔌',
-  tools: '🔧',
-  books: '📚',
-  kitchenware: '🍳',
-  toys: '🎮',
-  misc: '📦',
+const CATEGORY_ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  clothing: Shirt,
+  documents: FileText,
+  electronics: Zap,
+  tools: Wrench,
+  books: Book,
+  kitchenware: Utensils,
+  toys: Gamepad2,
+  misc: Package,
 };
 
 export function MobileScanViewModal() {
@@ -179,8 +180,8 @@ export function MobileScanViewModal() {
           {/* Header */}
           <div className="p-5 border-b border-[#e5e1d8] bg-white flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] rounded-xl flex items-center justify-center text-2xl shadow-xs" aria-hidden="true">
-                {preset?.icon ?? '📦'}
+              <div className="w-12 h-12 bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] rounded-xl flex items-center justify-center shadow-xs" aria-hidden="true">
+                <FurnitureIcon type={snapshot.furnitureType} size={22} className="text-[#6f7e45]" />
               </div>
               <div>
                 <span className="text-[10px] font-bold text-[#8a9a5b] uppercase tracking-wider">
@@ -233,28 +234,31 @@ export function MobileScanViewModal() {
                 {query ? t.mobileScanModal.noMatchingScanned : t.mobileScanModal.emptyScanned}
               </div>
             ) : (
-              filteredItems.map((item, i) => (
-                <div
-                  key={i}
-                  className="p-3 bg-white border border-[#e5e1d8] rounded-xl flex items-center justify-between shadow-2xs"
-                >
-                  <div>
-                    <div className="text-sm font-semibold text-[#4a4a38] flex items-center gap-2">
-                      <span aria-hidden="true">{CATEGORY_ICONS[item.category] || '📦'}</span>
-                      {item.name}
-                      {item.quantity > 1 && (
-                        <span className="text-[#8a9a5b] text-xs font-bold">×{item.quantity}</span>
-                      )}
-                    </div>
-                    <div className="text-[10px] text-[#a39f90] uppercase tracking-wide mt-1 flex items-center gap-1.5 flex-wrap">
-                      <Tag size={9} aria-hidden="true" /> {t.categories[item.category as ItemCategory] || item.category}
-                      {item.tags && item.tags.length > 0 && (
-                        <span className="text-[#8a8678]">· {item.tags.join(', ')}</span>
-                      )}
+              filteredItems.map((item, i) => {
+                const CategoryIcon = CATEGORY_ICON_MAP[item.category] || Package;
+                return (
+                  <div
+                    key={i}
+                    className="p-3 bg-white border border-[#e5e1d8] rounded-xl flex items-center justify-between shadow-2xs"
+                  >
+                    <div>
+                      <div className="text-sm font-semibold text-[#4a4a38] flex items-center gap-2">
+                        <CategoryIcon size={15} className="text-[#6f7e45] shrink-0" aria-hidden="true" />
+                        {item.name}
+                        {item.quantity > 1 && (
+                          <span className="text-[#8a9a5b] text-xs font-bold">×{item.quantity}</span>
+                        )}
+                      </div>
+                      <div className="text-[10px] text-[#a39f90] uppercase tracking-wide mt-1 flex items-center gap-1.5 flex-wrap">
+                        <Tag size={9} aria-hidden="true" /> {t.categories[item.category as ItemCategory] || item.category}
+                        {item.tags && item.tags.length > 0 && (
+                          <span className="text-[#8a8678]">· {item.tags.join(', ')}</span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
 

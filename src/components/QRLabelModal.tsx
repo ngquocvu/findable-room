@@ -5,9 +5,10 @@ import { useStore } from '@/src/store/useStore';
 import { Furniture, Room, StoredItem } from '@/src/types';
 import { FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
 import { buildContainerDeepLink, generateQRCodeDataURL } from '@/src/lib/qrCode';
-import { Printer, Download, Copy, Check, X, QrCode, Sparkles, SlidersHorizontal } from 'lucide-react';
+import { Printer, Download, Copy, Check, X, QrCode, Sparkles, SlidersHorizontal, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getTranslation } from '@/src/lib/translations';
+import { FurnitureIcon } from '@/src/components/FurnitureIcon';
 
 export type LabelStyle = 'detailed' | 'standard' | 'compact';
 
@@ -258,15 +259,16 @@ export function QRLabelModal() {
                       {/* Top Header */}
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-lg bg-[#f5f3ee] flex items-center justify-center text-lg shrink-0 print:border print:border-black/20">
-                            {preset?.icon ?? '📦'}
+                          <div className="w-8 h-8 rounded-lg bg-[#f5f3ee] flex items-center justify-center shrink-0 print:border print:border-black/20">
+                            <FurnitureIcon type={label.furniture.type} size={16} className="text-[#6f7e45] print:text-black" />
                           </div>
                           <div>
                             <h4 className="font-bold text-sm text-[#323223] leading-tight">
                               {label.furniture.name}
                             </h4>
-                            <p className="text-[10px] text-[#8a8678] font-medium print:text-black">
-                              📍 {label.room.name}
+                            <p className="text-[10px] text-[#8a8678] font-medium print:text-black flex items-center gap-1">
+                              <MapPin size={10} className="text-[#8a9a5b] print:text-black shrink-0" aria-hidden="true" />
+                              <span>{label.room.name}</span>
                             </p>
                           </div>
                         </div>

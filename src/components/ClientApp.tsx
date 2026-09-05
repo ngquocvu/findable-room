@@ -12,8 +12,6 @@ import { MobileScanViewModal } from './MobileScanViewModal';
 import { MobileBottomBar } from './MobileBottomBar';
 import { ImageToRoomModal } from './ImageToRoomModal';
 import { VoiceItemsModal } from './VoiceItemsModal';
-import { BrowserAgentBar } from './BrowserAgentBar';
-import { AILabsSettingsModal } from './AILabsSettingsModal';
 import { useStore } from '@/src/store/useStore';
 import { useFeatureFlags } from '@/src/store/useFeatureFlags';
 import { v4 as uuidv4 } from 'uuid';
@@ -86,8 +84,6 @@ export function ClientApp() {
       {/* AI Feature Modals */}
       <ImageToRoomModal />
       <VoiceItemsModal />
-      <BrowserAgentBar />
-      <AILabsSettingsModal />
     </div>
   );
 }

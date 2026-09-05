@@ -21,7 +21,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   wardrobe: {
     id: 'wardrobe',
     label: 'Wardrobe',
-    icon: '🗄️',
+    icon: 'archive',
     defaultDimensions: [1.2, 2.0, 0.6],
     defaultColor: '#8B6914',
     description: 'Tall storage with doors',
@@ -29,7 +29,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   cabinet: {
     id: 'cabinet',
     label: 'Cabinet',
-    icon: '🗃️',
+    icon: 'inbox',
     defaultDimensions: [0.8, 1.0, 0.5],
     defaultColor: '#6B4226',
     description: 'Medium storage unit',
@@ -37,7 +37,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   closet: {
     id: 'closet',
     label: 'Closet',
-    icon: '🚪',
+    icon: 'door',
     defaultDimensions: [1.5, 2.2, 0.7],
     defaultColor: '#9E7B5A',
     description: 'Large walk-in storage',
@@ -45,7 +45,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   table: {
     id: 'table',
     label: 'Table',
-    icon: '🪑',
+    icon: 'table',
     defaultDimensions: [1.2, 0.75, 0.8],
     defaultColor: '#A0522D',
     description: 'Flat surface with legs',
@@ -53,7 +53,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   desk: {
     id: 'desk',
     label: 'Desk',
-    icon: '🖥️',
+    icon: 'monitor',
     defaultDimensions: [1.4, 0.75, 0.7],
     defaultColor: '#5C4033',
     description: 'Work desk with drawers',
@@ -61,7 +61,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   shelf: {
     id: 'shelf',
     label: 'Shelf',
-    icon: '📚',
+    icon: 'layers',
     defaultDimensions: [1.0, 1.8, 0.3],
     defaultColor: '#CD853F',
     description: 'Open multi-tier shelving',
@@ -69,7 +69,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   drawer: {
     id: 'drawer',
     label: 'Drawer',
-    icon: '🗂️',
+    icon: 'drawer',
     defaultDimensions: [0.6, 0.8, 0.5],
     defaultColor: '#8B7355',
     description: 'Stacked pull-out drawers',
@@ -77,7 +77,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   box: {
     id: 'box',
     label: 'Box',
-    icon: '📦',
+    icon: 'box',
     defaultDimensions: [0.5, 0.4, 0.5],
     defaultColor: '#D2691E',
     description: 'Storage container/box',
@@ -85,7 +85,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   bed: {
     id: 'bed',
     label: 'Bed',
-    icon: '🛏️',
+    icon: 'bed',
     defaultDimensions: [1.5, 0.5, 2.0],
     defaultColor: '#6A5ACD',
     description: 'Bed with headboard & frame',
@@ -93,7 +93,7 @@ export const FURNITURE_PRESETS: Record<FurnitureType, FurniturePreset> = {
   fridge: {
     id: 'fridge',
     label: 'Fridge',
-    icon: '🧊',
+    icon: 'fridge',
     defaultDimensions: [0.7, 1.8, 0.7],
     defaultColor: '#B0C4DE',
     description: 'Refrigerator/freezer',

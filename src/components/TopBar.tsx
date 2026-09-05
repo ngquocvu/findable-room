@@ -2,16 +2,13 @@
 
 import { useStore } from '@/src/store/useStore';
 import { getTranslation } from '@/src/lib/translations';
-import { Search, Sparkles, QrCode, Menu, Globe, FlaskConical } from 'lucide-react';
+import { Search, Sparkles, QrCode, Menu, Globe } from 'lucide-react';
 import { useEffect } from 'react';
-import { useFeatureFlags } from '@/src/store/useFeatureFlags';
 
 export function TopBar() {
   const { rooms, activeRoomId, language, setLanguage } = useStore();
   const t = getTranslation(language);
   const activeRoom = rooms.find(r => r.id === activeRoomId);
-  const { flags } = useFeatureFlags();
-  const hasAnyAIFeature = flags.aiImageToRoom || flags.aiVoiceToItems || flags.aiBrowserAgent;
 
   // Custom events for modals
   const openSearch = () => {
@@ -95,19 +92,6 @@ export function TopBar() {
           <Sparkles size={13} aria-hidden="true" className="text-[#8a9a5b]" />
           <span className="hidden lg:inline">{t.topbar.guideDemo}</span>
         </button>
-
-        {/* AI Labs button */}
-        {hasAnyAIFeature && (
-          <button
-            onClick={() => window.dispatchEvent(new CustomEvent('open-ai-labs'))}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#6f7e45] hover:text-[#5c693a] rounded-lg text-xs font-semibold border border-[#d6d1c2] transition-colors shadow-2xs shrink-0"
-            title={t.aiLabs.title}
-            aria-label={t.aiLabs.title}
-          >
-            <FlaskConical size={13} aria-hidden="true" className="text-[#8a9a5b]" />
-            <span className="hidden xl:inline">AI Labs</span>
-          </button>
-        )}
 
         <button
           onClick={openSearch}

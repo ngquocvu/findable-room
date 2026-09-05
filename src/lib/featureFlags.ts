@@ -86,7 +86,7 @@ export function getEnvDefaults(): FeatureFlags {
     ),
     aiBrowserAgent: parseFlag(
       process.env.NEXT_PUBLIC_FF_BROWSER_AGENT,
-      true
+      false
     ),
   };
 }

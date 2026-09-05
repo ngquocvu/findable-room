@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useStore } from '@/src/store/useStore';
-import { X, Plus, Trash2, Tag, QrCode, Mic } from 'lucide-react';
+import {
+  X, Plus, Trash2, Tag, QrCode, Mic, Box,
+  Shirt, FileText, Zap, Wrench, Book, Utensils, Gamepad2, Package
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { v4 as uuidv4 } from 'uuid';
 import { ItemCategory } from '@/src/types';
@@ -10,15 +13,15 @@ import { FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
 import { getTranslation } from '@/src/lib/translations';
 import { useFeatureFlags } from '@/src/store/useFeatureFlags';
 
-const CATEGORY_ICONS: Record<ItemCategory, string> = {
-  clothing: '👕',
-  documents: '📄',
-  electronics: '🔌',
-  tools: '🔧',
-  books: '📚',
-  kitchenware: '🍳',
-  toys: '🎮',
-  misc: '📦',
+const CATEGORY_ICONS: Record<ItemCategory, React.ComponentType<{ size?: number; className?: string }>> = {
+  clothing: Shirt,
+  documents: FileText,
+  electronics: Zap,
+  tools: Wrench,
+  books: Book,
+  kitchenware: Utensils,
+  toys: Gamepad2,
+  misc: Package,
 };
 
 export function FurnitureContentsModal() {
@@ -110,8 +113,8 @@ export function FurnitureContentsModal() {
             {/* Header */}
             <div className="flex items-center justify-between p-4 sm:p-5 border-b border-[#e5e1d8] bg-white/90">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 bg-[#f1eee6] border border-[#e5e1d8] rounded-xl flex items-center justify-center text-2xl shadow-sm shrink-0" aria-hidden="true">
-                  {preset?.icon ?? '📦'}
+                <div className="w-10 h-10 bg-[#f1eee6] border border-[#e5e1d8] rounded-xl flex items-center justify-center shadow-2xs shrink-0" aria-hidden="true">
+                  <Box size={20} className="text-[#6f7e45]" />
                 </div>
                 <div className="min-w-0">
                   <h2 id="furniture-contents-title" className="text-base font-bold text-[#4a4a38] truncate" style={{ fontFamily: 'Georgia, serif' }}>
@@ -166,8 +169,11 @@ export function FurnitureContentsModal() {
                     <div key={item.id} className="p-3 bg-white border border-[#e5e1d8] hover:border-[#8a9a5b] rounded-xl flex items-center justify-between group transition-all shadow-sm">
                       <div>
                         <div className="text-[#4a4a38] text-sm font-semibold flex items-center gap-2">
-                          <span aria-hidden="true">{CATEGORY_ICONS[item.category]}</span>
-                          {item.name}
+                          {(() => {
+                            const CatIcon = CATEGORY_ICONS[item.category] || Package;
+                            return <CatIcon size={14} className="text-[#8a9a5b] shrink-0" aria-hidden="true" />;
+                          })()}
+                          <span>{item.name}</span>
                           {item.quantity > 1 && <span className="text-[#8a9a5b] font-bold">×{item.quantity}</span>}
                         </div>
                         <div className="text-[10px] text-[#a39f90] uppercase tracking-wide mt-1 flex items-center gap-1 flex-wrap">
@@ -230,7 +236,7 @@ export function FurnitureContentsModal() {
                     >
                       {(Object.keys(t.categories) as ItemCategory[]).map(cat => (
                         <option key={cat} value={cat}>
-                          {CATEGORY_ICONS[cat]} {t.categories[cat]}
+                          {t.categories[cat]}
                         </option>
                       ))}
                     </select>

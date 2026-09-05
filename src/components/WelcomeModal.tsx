@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '@/src/store/useStore';
 import { getDemoData } from '@/src/lib/demoData';
-import { Sparkles, Box, Search, Move3d, X, ArrowRight, QrCode } from 'lucide-react';
+import { Sparkles, Box, Search, Move3d, X, ArrowRight, QrCode, RotateCw, Hand, ZoomIn } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getTranslation } from '@/src/lib/translations';
 
@@ -160,19 +160,19 @@ export function WelcomeModal() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-[#555245]">
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-[#e5e1d8] shadow-2xs">
-                <span className="text-sm shrink-0" aria-hidden="true">🔄</span>
+                <RotateCw size={14} className="text-[#8a9a5b] shrink-0" aria-hidden="true" />
                 <span className="truncate">{t.welcomeModal.controlRotate}</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-[#e5e1d8] shadow-2xs">
-                <span className="text-sm shrink-0" aria-hidden="true">✋</span>
+                <Hand size={14} className="text-[#8a9a5b] shrink-0" aria-hidden="true" />
                 <span className="truncate">{t.welcomeModal.controlPan}</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-[#e5e1d8] shadow-2xs">
-                <span className="text-sm shrink-0" aria-hidden="true">🔍</span>
+                <ZoomIn size={14} className="text-[#8a9a5b] shrink-0" aria-hidden="true" />
                 <span className="truncate">{t.welcomeModal.controlZoom}</span>
               </div>
               <div className="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-[#e5e1d8] shadow-2xs">
-                <span className="text-sm shrink-0" aria-hidden="true">📦</span>
+                <Box size={14} className="text-[#8a9a5b] shrink-0" aria-hidden="true" />
                 <span className="truncate">{t.welcomeModal.controlOpen}</span>
               </div>
             </div>
