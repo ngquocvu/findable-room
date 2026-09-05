@@ -10,11 +10,17 @@ import { WelcomeModal } from './WelcomeModal';
 import { QRLabelModal } from './QRLabelModal';
 import { MobileScanViewModal } from './MobileScanViewModal';
 import { MobileBottomBar } from './MobileBottomBar';
+import { ImageToRoomModal } from './ImageToRoomModal';
+import { VoiceItemsModal } from './VoiceItemsModal';
+import { BrowserAgentBar } from './BrowserAgentBar';
+import { AILabsSettingsModal } from './AILabsSettingsModal';
 import { useStore } from '@/src/store/useStore';
+import { useFeatureFlags } from '@/src/store/useFeatureFlags';
 import { v4 as uuidv4 } from 'uuid';
 
 export function ClientApp() {
   const { rooms, addRoom, setActiveRoom, language } = useStore();
+  const { detectBrowserAI } = useFeatureFlags();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -23,6 +29,10 @@ export function ClientApp() {
       document.documentElement.lang = language;
     }
   }, [language]);
+
+  useEffect(() => {
+    detectBrowserAI();
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -73,6 +83,11 @@ export function ClientApp() {
       <QRLabelModal />
       <MobileScanViewModal />
       <MobileBottomBar />
+      {/* AI Feature Modals */}
+      <ImageToRoomModal />
+      <VoiceItemsModal />
+      <BrowserAgentBar />
+      <AILabsSettingsModal />
     </div>
   );
 }

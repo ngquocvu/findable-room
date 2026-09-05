@@ -1,13 +1,14 @@
 "use client";
 
 import { useStore } from '@/src/store/useStore';
-import { Plus, Trash2, Settings2, FolderDown, FolderUp, ChevronDown, ChevronRight, Sparkles, QrCode, X } from 'lucide-react';
+import { Plus, Trash2, Settings2, FolderDown, FolderUp, ChevronDown, ChevronRight, Sparkles, QrCode, X, Camera } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useRef, useEffect } from 'react';
 import { FURNITURE_PRESET_LIST, FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
 import { getDemoData } from '@/src/lib/demoData';
 import { FurnitureType } from '@/src/types';
 import { getTranslation } from '@/src/lib/translations';
+import { useFeatureFlags } from '@/src/store/useFeatureFlags';
 
 export function Sidebar() {
   const store = useStore();
@@ -22,6 +23,7 @@ export function Sidebar() {
   const [catalogOpen, setCatalogOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { isEnabled } = useFeatureFlags();
 
   useEffect(() => {
     const handleOpenMobile = () => setMobileOpen(true);
@@ -230,6 +232,28 @@ export function Sidebar() {
                   </div>
                   <Plus size={13} aria-hidden="true" className="text-[#8a9a5b] shrink-0 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all ml-1.5" />
                 </button>
+
+                {/* 3. AI Room Scan Button (feature-flagged) */}
+                {isEnabled('aiImageToRoom') && (
+                  <button
+                    onClick={() => window.dispatchEvent(new CustomEvent('open-image-to-room'))}
+                    aria-label={t.imageToRoom.buttonLabel}
+                    className="w-full p-2.5 rounded-xl border border-[#e5e1d8] hover:border-[#8a9a5b] bg-white hover:bg-[#f1eee6] flex items-center justify-between transition-all group shadow-2xs text-left"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-7 h-7 rounded-lg bg-[#f0f5ee] text-[#6f7e45] border border-[#d6d1c2] flex items-center justify-center shrink-0 shadow-xs group-hover:bg-[#8a9a5b] group-hover:text-white transition-colors" aria-hidden="true">
+                        <Camera size={13} />
+                      </div>
+                      <div className="min-w-0 flex flex-col">
+                        <span className="text-xs font-semibold text-[#4a4a38] group-hover:text-[#6f7e45] transition-colors truncate">
+                          {t.imageToRoom.buttonLabel}
+                        </span>
+                        <span className="text-[10px] text-[#8a8678] truncate">AI · Gemini Vision</span>
+                      </div>
+                    </div>
+                    <Camera size={13} aria-hidden="true" className="text-[#8a9a5b] shrink-0 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all ml-1.5" />
+                  </button>
+                )}
               </div>
             </div>
 

@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useStore } from '@/src/store/useStore';
-import { X, Plus, Trash2, Tag, QrCode } from 'lucide-react';
+import { X, Plus, Trash2, Tag, QrCode, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { v4 as uuidv4 } from 'uuid';
 import { ItemCategory } from '@/src/types';
 import { FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
 import { getTranslation } from '@/src/lib/translations';
+import { useFeatureFlags } from '@/src/store/useFeatureFlags';
 
 const CATEGORY_ICONS: Record<ItemCategory, string> = {
   clothing: '👕',
@@ -26,6 +27,7 @@ export function FurnitureContentsModal() {
   const [openFurnitureId, setOpenFurnitureId] = useState<string | null>(null);
   const { setActiveFurniture, furniture, items, addItem, deleteItem, language } = useStore();
   const t = getTranslation(language);
+  const { isEnabled } = useFeatureFlags();
 
   const [newItemName, setNewItemName] = useState('');
   const [newItemCategory, setNewItemCategory] = useState<ItemCategory>('misc');
@@ -131,6 +133,18 @@ export function FurnitureContentsModal() {
                   <QrCode size={14} aria-hidden="true" />
                   <span className="hidden sm:inline">{t.contentsModal.qrSticker}</span>
                 </button>
+                {isEnabled('aiVoiceToItems') && openFurnitureId && (
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new CustomEvent('open-voice-items', { detail: openFurnitureId }))}
+                    title={t.voiceItems.buttonLabel}
+                    aria-label={t.voiceItems.buttonLabel}
+                    className="text-[#6f7e45] hover:text-[#5c693a] bg-white hover:bg-[#f1eee6] border border-[#d6d1c2] px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 text-xs font-semibold shadow-2xs"
+                  >
+                    <Mic size={14} aria-hidden="true" className="text-[#8a9a5b]" />
+                    <span className="hidden sm:inline">AI</span>
+                  </button>
+                )}
                 <button
                   onClick={handleClose}
                   aria-label={t.common.close}

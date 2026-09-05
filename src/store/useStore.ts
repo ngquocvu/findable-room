@@ -11,6 +11,7 @@ interface StoreActions {
   addItem: (item: StoredItem) => void;
   updateItem: (id: string, item: Partial<StoredItem>) => void;
   deleteItem: (id: string) => void;
+  replaceFurnitureItems: (furnitureId: string, newItems: StoredItem[]) => void;
   setActiveRoom: (id: string | null) => void;
   setActiveFurniture: (id: string | null) => void;
   importData: (data: AppState) => void;
@@ -74,6 +75,12 @@ export const useStore = create<Store>((set) => ({
   })),
   deleteItem: (id) => set((state) => ({
     items: state.items.filter((i) => i.id !== id),
+  })),
+  replaceFurnitureItems: (furnitureId, newItems) => set((state) => ({
+    items: [
+      ...state.items.filter((i) => i.furnitureId !== furnitureId),
+      ...newItems,
+    ],
   })),
 
   setActiveRoom: (id) => set({ activeRoomId: id, activeFurnitureId: null }),

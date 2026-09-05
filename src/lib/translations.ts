@@ -88,6 +88,13 @@ export interface TranslationDictionary {
     step2Desc: string;
     step3Title: string;
     step3Desc: string;
+    step4Title: string;
+    step4Desc: string;
+    controlsTitle: string;
+    controlRotate: string;
+    controlPan: string;
+    controlZoom: string;
+    controlOpen: string;
     getStartedPrompt: string;
     loadDemoTitle: string;
     loadDemoDesc: string;
@@ -130,6 +137,112 @@ export interface TranslationDictionary {
     search: string;
     qrLabels: string;
     guide: string;
+  };
+  imageToRoom: {
+    buttonLabel: string;
+    modalTitle: string;
+    modalSubtitle: string;
+    dropzonePrompt: string;
+    dropzoneHint: string;
+    analyzing: string;
+    analyzingStep1: string;
+    analyzingStep2: string;
+    analyzingStep3: string;
+    previewTitle: string;
+    roomDimensions: string;
+    wallFloorColors: string;
+    detectedFurniture: string;
+    noFurnitureFound: string;
+    confidence: string;
+    confidenceHigh: string;
+    confidenceMedium: string;
+    confidenceLow: string;
+    dimensionRationale: string;
+    createRoomBtn: string;
+    createEmptyRoomBtn: string;
+    retakeBtn: string;
+    errorNotRoom: string;
+    errorBlurry: string;
+    errorTooClose: string;
+    errorGeneric: string;
+    emptyRoomMsg: string;
+    emptyRoomSub: string;
+    furnitureToggleAll: string;
+    adjustDimensions: string;
+    newRoomNamePlaceholder: string;
+    apiKeyPrompt: string;
+    enterApiKey: string;
+  };
+  voiceItems: {
+    buttonLabel: string;
+    modalTitle: string;
+    listening: string;
+    processing: string;
+    speakNow: string;
+    retryBtn: string;
+    addMode: string;
+    replaceMode: string;
+    replaceWarning: string;
+    previewTitle: string;
+    transcriptLabel: string;
+    parsedItems: string;
+    noItemsParsed: string;
+    diffAddSummary: string;
+    diffReplaceSummary: string;
+    confirmBtn: string;
+    cancelBtn: string;
+    editTranscript: string;
+    parseBtn: string;
+    sourceCloud: string;
+    sourceBrowser: string;
+    intentDetected: string;
+    apiKeyPrompt: string;
+    enterApiKey: string;
+  };
+  agentBar: {
+    placeholder: string;
+    placeholderMobile: string;
+    thinking: string;
+    confirmPlan: string;
+    cancelPlan: string;
+    executingStep: string;
+    doneMessage: string;
+    errorMessage: string;
+    cloudFallback: string;
+    voiceBtn: string;
+    sendBtn: string;
+  };
+  aiLabs: {
+    title: string;
+    subtitle: string;
+    providerTitle: string;
+    providerAuto: string;
+    providerAutoDesc: string;
+    providerCloud: string;
+    providerCloudDesc: string;
+    providerBrowser: string;
+    providerBrowserDesc: string;
+    browserAvailable: string;
+    browserUnavailable: string;
+    featureFlagsTitle: string;
+    flagImageToRoom: string;
+    flagImageToRoomDesc: string;
+    flagVoiceToItems: string;
+    flagVoiceToItemsDesc: string;
+    flagBrowserAgent: string;
+    flagBrowserAgentDesc: string;
+    closeBtn: string;
+    apiKeyMissing: string;
+    apiKeyTitle: string;
+    apiKeyDesc: string;
+    apiKeyPlaceholder: string;
+    apiKeySave: string;
+    apiKeySaved: string;
+    apiKeyRemove: string;
+    apiKeyStatusActive: string;
+    apiKeyStatusEnv: string;
+    apiKeyStatusNone: string;
+    apiKeyGetFree: string;
   };
 }
 
@@ -233,24 +346,31 @@ export const translations: Record<Language, TranslationDictionary> = {
       clearBtn: 'Xoá',
     },
     welcomeModal: {
-      smartInventoryBadge: 'Quản lý kho đồ 3D thông minh',
+      smartInventoryBadge: 'Bản đồ phòng & Quản lý đồ 3D thông minh',
       title: 'Chào mừng bạn đến với RoomFindable',
-      subtitle: 'Thiết kế phòng 3D trực quan, ghi nhớ vị trí từng món đồ vật, và tìm thấy mọi thứ trong tích tắc.',
-      step1Title: '1. Kéo thả trong không gian 3D',
-      step1Desc: 'Bố trí tủ quần áo, bàn học, giường ngủ. Nhấp và kéo rê mượt mà theo lưới phòng.',
-      step2Title: '2. Lưu trữ & Sắp xếp đồ',
-      step2Desc: 'Nhấp vào bất kỳ đồ vật nào để ghi lại danh sách quần áo, dây sạc, sách vở bên trong.',
-      step3Title: '3. Tìm kiếm tức thì ⌘K',
-      step3Desc: 'Gõ tên món đồ bất kỳ để định vị và phóng to ngay tới chỗ cất trong phòng 3D.',
-      getStartedPrompt: 'Bạn muốn bắt đầu như thế nào?',
-      loadDemoTitle: 'Tải phòng mẫu thử',
-      loadDemoDesc: 'Khám phá phòng studio có sẵn bàn làm việc, tủ đồ, kệ sách & 15 đồ vật mẫu.',
-      startFreshTitle: 'Bắt đầu phòng trống',
-      startFreshDesc: 'Bắt đầu với căn phòng trống tinh để tự tay bố trí đồ đạc theo ý bạn.',
-      recommended: 'Khuyên dùng',
-      emptyCanvas: 'Phòng trống',
-      dontShowAgain: 'Không hiển thị lại hướng dẫn này khi mở trang',
-      skipForNow: 'Bỏ qua lúc này',
+      subtitle: 'Bản đồ 3D trực quan giúp bạn biết chính xác từng món đồ (hộ chiếu, sạc cáp, quần áo...) đang ở tủ hay ngăn kéo nào.',
+      step1Title: '1. Xếp đồ phòng 3D',
+      step1Desc: 'Chọn phòng ở thanh bên, thêm tủ, bàn, giường. Kéo thả đồ vật trong phòng 3D theo ý muốn.',
+      step2Title: '2. Ghi nhớ đồ cất bên trong',
+      step2Desc: 'Nhấp đúp vào bất kỳ tủ/hộp nào để ghi tên đồ đạc, số lượng và thẻ tag cất bên trong.',
+      step3Title: '3. Tìm kiếm tức thì (⌘K)',
+      step3Desc: 'Chỉ cần gõ tên món đồ bất kỳ, camera 3D sẽ tự động xoay và phóng to đến đúng nơi cất.',
+      step4Title: '4. In tem QR dán thùng thực tế',
+      step4Desc: 'In mã QR dán lên hộp/ngăn kéo ngoài đời thực. Quét bằng điện thoại để xem đồ bên trong mà không cần lục tung!',
+      controlsTitle: 'Cách điều khiển trong phòng 3D:',
+      controlRotate: 'Chuột trái / 1 ngón: Xoay phòng 360°',
+      controlPan: 'Chuột phải / 2 ngón: Di chuyển góc nhìn',
+      controlZoom: 'Cuộn chuột / Chụm ngón: Phóng to & thu nhỏ',
+      controlOpen: 'Nhấp vào đồ vật: Mở danh sách đồ bên trong',
+      getStartedPrompt: 'Bắt đầu sử dụng ngay:',
+      loadDemoTitle: 'Thử ngay với Phòng mẫu có sẵn đồ',
+      loadDemoDesc: 'Trải nghiệm ngay phòng studio có sẵn bàn làm việc, tủ đồ & 15 món đồ mẫu để bạn thử xoay 3D và tìm kiếm.',
+      startFreshTitle: 'Tự tạo phòng mới của tôi',
+      startFreshDesc: 'Bắt đầu với một căn phòng trống để bạn tự thiết kế kích thước và sắp xếp đồ đạc nhà mình.',
+      recommended: 'Khuyên dùng cho người mới',
+      emptyCanvas: 'Phòng trống tự tạo',
+      dontShowAgain: 'Không tự động mở lại khi vào trang',
+      skipForNow: 'Khám phá ngay',
     },
     qrLabelModal: {
       batchTitle: 'In danh sách tem nhãn đồ đạc',
@@ -284,6 +404,112 @@ export const translations: Record<Language, TranslationDictionary> = {
       search: 'Tìm kiếm',
       qrLabels: 'Tem QR',
       guide: 'Hướng dẫn',
+    },
+    imageToRoom: {
+      buttonLabel: 'Quét phòng từ ảnh (AI)',
+      modalTitle: 'Phân tích phòng từ ảnh',
+      modalSubtitle: 'Tải ảnh phòng thực tế để AI tự nhận biết kích thước và đồ nội thất.',
+      dropzonePrompt: 'Thả ảnh vào đây hoặc nhấp để chọn',
+      dropzoneHint: 'Hỗ trợ JPG, PNG, WEBP tối đa 10MB',
+      analyzing: 'Đang phân tích ảnh...',
+      analyzingStep1: 'Xác định ranh giới phòng...',
+      analyzingStep2: 'Ước tính kích thước từ tỷ lệ thực...',
+      analyzingStep3: 'Nhận diện đồ nội thất...',
+      previewTitle: 'Xem trước kết quả',
+      roomDimensions: 'Kích thước phòng',
+      wallFloorColors: 'Màu tường & sàn',
+      detectedFurniture: 'Đồ nội thất nhận diện được',
+      noFurnitureFound: 'Không tìm thấy đồ nội thất nào trong ảnh.',
+      confidence: 'Độ tin cậy',
+      confidenceHigh: 'Cao',
+      confidenceMedium: 'Trung bình',
+      confidenceLow: 'Thấp',
+      dimensionRationale: 'Căn cứ ước tính',
+      createRoomBtn: 'Tạo phòng với bố cục này',
+      createEmptyRoomBtn: 'Tạo phòng trống',
+      retakeBtn: 'Chụp/chọn lại',
+      errorNotRoom: 'Không nhận ra không gian trong nhà. Hãy chụp rõ toàn bộ phòng nhé.',
+      errorBlurry: 'Ảnh quá tối hoặc mờ. Hãy bật đèn và chụp lại.',
+      errorTooClose: 'Ảnh chụp quá gần. Hãy lùi ra và chụp toàn cảnh phòng.',
+      errorGeneric: 'Phân tích thất bại. Vui lòng thử lại.',
+      emptyRoomMsg: 'Phòng trống được phát hiện!',
+      emptyRoomSub: 'AI đã đo kích thước và nhận màu tường/sàn. Bạn có muốn tạo phòng trống này không?',
+      furnitureToggleAll: 'Chọn tất cả',
+      adjustDimensions: 'Điều chỉnh kích thước',
+      newRoomNamePlaceholder: 'Tên phòng mới...',
+      apiKeyPrompt: 'Cần có Gemini API Key để phân tích ảnh phòng.',
+      enterApiKey: 'Nhập API Key',
+    },
+    voiceItems: {
+      buttonLabel: 'Nói để thêm đồ (AI)',
+      modalTitle: 'Thêm đồ bằng giọng nói',
+      listening: 'Đang nghe...',
+      processing: 'Đang xử lý...',
+      speakNow: 'Hãy nói tên đồ đạc bạn muốn lưu vào đây...',
+      retryBtn: 'Thu âm lại',
+      addMode: 'Thêm vào',
+      replaceMode: 'Thay thế tất cả',
+      replaceWarning: 'Sẽ xoá {{count}} đồ hiện có trong {{name}}',
+      previewTitle: 'Xem trước trước khi lưu',
+      transcriptLabel: 'Bạn đã nói:',
+      parsedItems: 'Đồ nhận diện được:',
+      noItemsParsed: 'Không nhận diện được đồ nào. Hãy thử nói rõ hơn.',
+      diffAddSummary: 'Hiện có {{current}} đồ → Sẽ thành {{next}} đồ (+{{added}} mới)',
+      diffReplaceSummary: 'Hiện có {{current}} đồ → Sẽ thành {{next}} đồ (xoá {{current}} cũ)',
+      confirmBtn: 'Xác nhận cập nhật',
+      cancelBtn: 'Huỷ',
+      editTranscript: 'Chỉnh sửa văn bản',
+      parseBtn: 'Phân tích lại',
+      sourceCloud: 'Cloud AI',
+      sourceBrowser: 'AI trên thiết bị',
+      intentDetected: 'AI nhận biết ý định:',
+      apiKeyPrompt: 'Cần có Gemini API Key cho phân tích qua Cloud AI.',
+      enterApiKey: 'Nhập API Key',
+    },
+    agentBar: {
+      placeholder: 'Hỏi AI hoặc ra lệnh... (vd: "Thêm tủ quần áo", "Laptop đang ở đâu?")',
+      placeholderMobile: 'Lệnh AI...',
+      thinking: 'AI đang suy nghĩ...',
+      confirmPlan: 'Thực hiện kế hoạch này?',
+      cancelPlan: 'Huỷ',
+      executingStep: 'Đang thực hiện bước {{step}}/{{total}}...',
+      doneMessage: 'Hoàn thành!',
+      errorMessage: 'Thực thi thất bại. Vui lòng thử lại.',
+      cloudFallback: 'Đang dùng Cloud AI (trình duyệt không hỗ trợ AI tích hợp)',
+      voiceBtn: 'Nói lệnh',
+      sendBtn: 'Gửi',
+    },
+    aiLabs: {
+      title: 'AI Labs & Cài đặt',
+      subtitle: 'Bật/tắt tính năng AI và chọn nhà cung cấp AI phù hợp.',
+      providerTitle: 'Nhà cung cấp AI',
+      providerAuto: 'Tự động (Khuyên dùng)',
+      providerAutoDesc: 'AI on-device cho giọng nói, Cloud Gemini cho phân tích ảnh.',
+      providerCloud: 'Cloud Gemini Flash Lite',
+      providerCloudDesc: 'Toàn bộ dùng Gemini Flash Lite qua máy chủ.',
+      providerBrowser: 'AI trên thiết bị (Gemini Nano)',
+      providerBrowserDesc: 'Xử lý hoàn toàn trong trình duyệt. Miễn phí & riêng tư.',
+      browserAvailable: 'AI trên thiết bị sẵn sàng (Gemini Nano)',
+      browserUnavailable: 'AI trên thiết bị chưa khả dụng trên trình duyệt này',
+      featureFlagsTitle: 'Tính năng AI',
+      flagImageToRoom: 'Quét phòng từ ảnh',
+      flagImageToRoomDesc: 'Nhận diện đồ nội thất và kích thước phòng từ ảnh chụp.',
+      flagVoiceToItems: 'Thêm đồ bằng giọng nói',
+      flagVoiceToItemsDesc: 'Nói tên đồ đạc để tự động thêm vào tủ/hộp.',
+      flagBrowserAgent: 'AI Copilot trong ứng dụng',
+      flagBrowserAgentDesc: 'Gõ hoặc nói lệnh để AI tự động sắp xếp phòng.',
+      closeBtn: 'Đóng',
+      apiKeyMissing: 'Chưa thiết lập GEMINI_API_KEY. Bạn có thể nhập khoá thủ công ngay bên dưới để sử dụng.',
+      apiKeyTitle: 'Khóa API Gemini (Thủ công)',
+      apiKeyDesc: 'Nhập khóa API cá nhân từ Google AI Studio để sử dụng Cloud AI hoàn toàn miễn phí & riêng tư.',
+      apiKeyPlaceholder: 'Dán Gemini API Key (bắt đầu bằng AIzaSy...)',
+      apiKeySave: 'Lưu API Key',
+      apiKeySaved: 'Đã lưu API Key an toàn trên trình duyệt này',
+      apiKeyRemove: 'Xoá Key',
+      apiKeyStatusActive: 'Đã lưu khoá thủ công',
+      apiKeyStatusEnv: 'Đang dùng từ tệp cấu hình (.env)',
+      apiKeyStatusNone: 'Chưa thiết lập',
+      apiKeyGetFree: 'Lấy API Key miễn phí tại Google AI Studio →',
     },
   },
   en: {
@@ -385,24 +611,31 @@ export const translations: Record<Language, TranslationDictionary> = {
       clearBtn: 'Clear',
     },
     welcomeModal: {
-      smartInventoryBadge: 'Smart 3D Inventory',
+      smartInventoryBadge: 'Smart 3D Room & Inventory Map',
       title: 'Welcome to RoomFindable',
-      subtitle: 'Visually design your room in 3D, remember where every single item is stored, and find anything in seconds.',
-      step1Title: '1. 3D Drag & Drop',
-      step1Desc: 'Add wardrobes, desks & beds. Click & drag smoothly across your room.',
-      step2Title: '2. Store & Organize',
-      step2Desc: 'Double-click any furniture to catalog what items, cables, or documents are inside.',
-      step3Title: '3. Instant ⌘K Search',
-      step3Desc: 'Type any item name to highlight its exact 3D furniture container in real-time.',
-      getStartedPrompt: 'How would you like to get started?',
-      loadDemoTitle: 'Load Demo Room',
-      loadDemoDesc: 'Explore a pre-built studio with desk, wardrobe, shelf & 15 categorized sample items.',
-      startFreshTitle: 'Start Fresh',
-      startFreshDesc: 'Begin with a clean room and add your own custom furniture and belongings from scratch.',
-      recommended: 'Recommended',
-      emptyCanvas: 'Empty Canvas',
-      dontShowAgain: "Don't show this guide on startup",
-      skipForNow: 'Skip for now',
+      subtitle: 'Visually map your room in 3D and always know exactly where passports, cables, or documents are stored.',
+      step1Title: '1. Arrange Room in 3D',
+      step1Desc: 'Select a room, add wardrobes, desks & beds. Click and drag furniture anywhere across the 3D room floor.',
+      step2Title: '2. Catalog Stored Items',
+      step2Desc: 'Click any furniture piece to log item names, quantities, and tags stored inside.',
+      step3Title: '3. Instant Search (⌘K)',
+      step3Desc: 'Type any item name to automatically rotate and zoom the 3D camera to its exact storage location.',
+      step4Title: '4. Print Physical QR Stickers',
+      step4Desc: 'Print smart QR stickers for your real boxes or drawers. Scan with your phone camera to inspect contents instantly!',
+      controlsTitle: '3D Navigation Controls:',
+      controlRotate: 'Left click / 1 finger: Rotate 360°',
+      controlPan: 'Right click / 2 fingers: Pan view',
+      controlZoom: 'Mouse wheel / Pinch: Zoom in & out',
+      controlOpen: 'Click furniture: View & manage items',
+      getStartedPrompt: 'Get started now:',
+      loadDemoTitle: 'Try with Pre-Furnished Sample Room',
+      loadDemoDesc: 'Explore a complete studio room with desk, wardrobe, laptop & books ready for you to try searching and 3D navigation.',
+      startFreshTitle: 'Create My Own Empty Room',
+      startFreshDesc: 'Start with a blank canvas to customize dimensions, wall colors, and organize your real-world room.',
+      recommended: 'Recommended for beginners',
+      emptyCanvas: 'Custom Empty Room',
+      dontShowAgain: "Don't show this guide automatically on startup",
+      skipForNow: 'Explore Room',
     },
     qrLabelModal: {
       batchTitle: 'Print Storage Stickers Sheet',
@@ -436,6 +669,112 @@ export const translations: Record<Language, TranslationDictionary> = {
       search: 'Search',
       qrLabels: 'QR Labels',
       guide: 'Guide',
+    },
+    imageToRoom: {
+      buttonLabel: 'AI Room Scan from Photo',
+      modalTitle: 'Analyze Room from Photo',
+      modalSubtitle: 'Upload a room photo and AI will detect dimensions and furniture layout automatically.',
+      dropzonePrompt: 'Drop photo here or click to browse',
+      dropzoneHint: 'Supports JPG, PNG, WEBP up to 10MB',
+      analyzing: 'Analyzing image...',
+      analyzingStep1: 'Detecting room boundaries...',
+      analyzingStep2: 'Estimating dimensions from scale anchors...',
+      analyzingStep3: 'Recognizing furniture pieces...',
+      previewTitle: 'Preview Results',
+      roomDimensions: 'Room Dimensions',
+      wallFloorColors: 'Wall & Floor Colors',
+      detectedFurniture: 'Detected Furniture',
+      noFurnitureFound: 'No furniture detected in this image.',
+      confidence: 'Confidence',
+      confidenceHigh: 'High',
+      confidenceMedium: 'Medium',
+      confidenceLow: 'Low',
+      dimensionRationale: 'Estimation basis',
+      createRoomBtn: 'Create Room with this Layout',
+      createEmptyRoomBtn: 'Create Empty Room',
+      retakeBtn: 'Pick Another Photo',
+      errorNotRoom: 'Could not detect an indoor room. Please capture a clear photo of a room interior.',
+      errorBlurry: 'Image is too dark or blurry. Turn on lights and try again.',
+      errorTooClose: 'Photo is too close. Step back and capture the whole room.',
+      errorGeneric: 'Analysis failed. Please try again.',
+      emptyRoomMsg: 'Empty room detected!',
+      emptyRoomSub: 'AI estimated room size and matched wall/floor tones. Would you like to create this empty room?',
+      furnitureToggleAll: 'Select all',
+      adjustDimensions: 'Adjust dimensions',
+      newRoomNamePlaceholder: 'New room name...',
+      apiKeyPrompt: 'Gemini API Key is required for room photo analysis.',
+      enterApiKey: 'Enter API Key',
+    },
+    voiceItems: {
+      buttonLabel: 'Voice Add Items (AI)',
+      modalTitle: 'Add Items by Voice',
+      listening: 'Listening...',
+      processing: 'Processing...',
+      speakNow: 'Say the names of items you want to store here...',
+      retryBtn: 'Re-record',
+      addMode: 'Add new',
+      replaceMode: 'Replace all',
+      replaceWarning: 'This will remove {{count}} existing items in {{name}}',
+      previewTitle: 'Preview Before Saving',
+      transcriptLabel: 'You said:',
+      parsedItems: 'Parsed items:',
+      noItemsParsed: 'No items detected. Try speaking more clearly.',
+      diffAddSummary: 'Currently {{current}} items → Will become {{next}} (+{{added}} new)',
+      diffReplaceSummary: 'Currently {{current}} items → Will become {{next}} (removes {{current}} existing)',
+      confirmBtn: 'Confirm & Save',
+      cancelBtn: 'Cancel',
+      editTranscript: 'Edit transcript',
+      parseBtn: 'Re-parse',
+      sourceCloud: 'Cloud AI',
+      sourceBrowser: 'On-Device AI',
+      intentDetected: 'AI detected intent:',
+      apiKeyPrompt: 'Gemini API Key is required for Cloud AI parsing.',
+      enterApiKey: 'Enter API Key',
+    },
+    agentBar: {
+      placeholder: 'Ask AI or give a command... (e.g. "Add a wardrobe", "Where is my laptop?")',
+      placeholderMobile: 'AI command...',
+      thinking: 'AI is thinking...',
+      confirmPlan: 'Execute this plan?',
+      cancelPlan: 'Cancel',
+      executingStep: 'Executing step {{step}} of {{total}}...',
+      doneMessage: 'Done!',
+      errorMessage: 'Execution failed. Please try again.',
+      cloudFallback: 'Using Cloud AI (browser AI not available)',
+      voiceBtn: 'Voice command',
+      sendBtn: 'Send',
+    },
+    aiLabs: {
+      title: 'AI Labs & Settings',
+      subtitle: 'Toggle AI features and select your preferred AI provider.',
+      providerTitle: 'AI Provider',
+      providerAuto: 'Auto (Recommended)',
+      providerAutoDesc: 'On-device AI for voice, Cloud Gemini for image analysis.',
+      providerCloud: 'Cloud Gemini Flash Lite',
+      providerCloudDesc: 'All AI via server with Gemini Flash Lite.',
+      providerBrowser: 'On-Device AI (Gemini Nano)',
+      providerBrowserDesc: 'Process entirely in the browser. Free & private.',
+      browserAvailable: 'On-Device AI Ready (Gemini Nano)',
+      browserUnavailable: 'On-Device AI not available in this browser',
+      featureFlagsTitle: 'AI Features',
+      flagImageToRoom: 'AI Room Scan from Photo',
+      flagImageToRoomDesc: 'Detect furniture and room dimensions from a photo.',
+      flagVoiceToItems: 'Add Items by Voice',
+      flagVoiceToItemsDesc: 'Speak item names to auto-populate storage inventory.',
+      flagBrowserAgent: 'In-App AI Copilot',
+      flagBrowserAgentDesc: 'Type or speak commands to let AI organize your room.',
+      closeBtn: 'Close',
+      apiKeyMissing: 'GEMINI_API_KEY is not configured. You can enter your API key manually below.',
+      apiKeyTitle: 'Gemini API Key (Manual)',
+      apiKeyDesc: 'Enter your personal API key from Google AI Studio to use Cloud AI features freely & privately.',
+      apiKeyPlaceholder: 'Paste Gemini API Key (starts with AIzaSy...)',
+      apiKeySave: 'Save API Key',
+      apiKeySaved: 'API Key saved securely in this browser',
+      apiKeyRemove: 'Remove Key',
+      apiKeyStatusActive: 'Custom Key Active',
+      apiKeyStatusEnv: 'Using from Environment (.env)',
+      apiKeyStatusNone: 'Not Configured',
+      apiKeyGetFree: 'Get a free API Key at Google AI Studio →',
     },
   },
 };
