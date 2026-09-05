@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useStore } from '@/src/store/useStore';
-import { X, Plus, Trash2, Tag } from 'lucide-react';
+import { X, Plus, Trash2, Tag, QrCode } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { v4 as uuidv4 } from 'uuid';
 import { ItemCategory } from '@/src/types';
@@ -89,9 +89,20 @@ export function FurnitureContentsModal() {
                   <p className="text-xs text-[#a39f90] capitalize">{activeFurn.type} · {furnItems.length} items</p>
                 </div>
               </div>
-              <button onClick={handleClose} className="text-[#a39f90] hover:text-[#4a4a38] bg-[#f1eee6] p-1.5 rounded-lg transition-colors">
-                <X size={16} />
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent('open-qr-label', { detail: activeFurn.id }))}
+                  title="Print QR Sticker"
+                  className="text-[#7a8c4b] hover:text-[#5f6f36] bg-[#f2f6ee] hover:bg-[#eaf1e4] border border-[#d6d1c2] px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1 text-xs font-semibold shadow-2xs"
+                >
+                  <QrCode size={14} />
+                  <span>QR Sticker</span>
+                </button>
+                <button onClick={handleClose} className="text-[#a39f90] hover:text-[#4a4a38] bg-[#f1eee6] p-1.5 rounded-lg transition-colors">
+                  <X size={16} />
+                </button>
+              </div>
             </div>
 
             {/* Items list */}

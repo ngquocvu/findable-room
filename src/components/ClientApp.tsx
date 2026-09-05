@@ -7,6 +7,8 @@ import { SceneContainer } from './3d/SceneContainer';
 import { SearchModal } from './SearchModal';
 import { FurnitureContentsModal } from './FurnitureContentsModal';
 import { WelcomeModal } from './WelcomeModal';
+import { QRLabelModal } from './QRLabelModal';
+import { MobileScanViewModal } from './MobileScanViewModal';
 import { useStore } from '@/src/store/useStore';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -47,6 +49,8 @@ export function ClientApp() {
        <SearchModal />
        <FurnitureContentsModal />
        <WelcomeModal />
+       <QRLabelModal />
+       <MobileScanViewModal />
     </div>
   );
 }

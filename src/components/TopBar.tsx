@@ -1,7 +1,7 @@
 "use client";
 
 import { useStore } from '@/src/store/useStore';
-import { Search, Sparkles } from 'lucide-react';
+import { Search, Sparkles, QrCode } from 'lucide-react';
 import { useEffect } from 'react';
 
 export function TopBar() {
@@ -15,6 +15,10 @@ export function TopBar() {
 
   const openWelcome = () => {
     window.dispatchEvent(new CustomEvent('open-welcome'));
+  };
+
+  const openBatchQR = () => {
+    window.dispatchEvent(new CustomEvent('open-batch-qr', { detail: activeRoomId }));
   };
 
   useEffect(() => {
@@ -41,6 +45,16 @@ export function TopBar() {
         )}
       </div>
       <div className="flex items-center gap-2">
+        <button
+          onClick={openBatchQR}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#4a4a38] rounded-lg text-xs font-semibold border border-[#d6d1c2] transition-colors shadow-sm"
+          title="Print QR Stickers for storage containers"
+        >
+          <QrCode size={13} className="text-[#8a9a5b]" />
+          <span className="hidden sm:inline">Print QR Stickers</span>
+          <span className="sm:hidden">QR Labels</span>
+        </button>
+
         <button
           onClick={openWelcome}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#7a8c4b] hover:text-[#5f6f36] rounded-lg text-xs font-semibold border border-[#d6d1c2] transition-colors shadow-sm"

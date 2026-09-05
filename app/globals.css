@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+@media print {
+  /* Hide non-printable app layout & 3D canvas */
+  aside,
+  nav,
+  header,
+  canvas,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Reset modal containers to behave like a standard page */
+  .print\:static {
+    position: static !important;
+  }
+
+  #print-stickers-container {
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  @page {
+    size: auto;
+    margin: 0.8cm;
+  }
+}

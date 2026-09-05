@@ -1,7 +1,7 @@
 "use client";
 
 import { useStore } from '@/src/store/useStore';
-import { Plus, Trash2, Settings2, FolderDown, FolderUp, ChevronDown, ChevronRight, Sparkles } from 'lucide-react';
+import { Plus, Trash2, Settings2, FolderDown, FolderUp, ChevronDown, ChevronRight, Sparkles, QrCode } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useRef } from 'react';
 import { FURNITURE_PRESET_LIST, FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
@@ -243,8 +243,18 @@ export function Sidebar() {
 
                 {/* Furniture List */}
                 <div className="flex flex-col gap-1.5">
-                  <div className="text-[10px] font-semibold text-[#a39f90] uppercase tracking-[0.15em]">
-                    {activeRoom?.name} · {activeRoomFurniture.length} pieces
+                  <div className="flex items-center justify-between text-[10px] font-semibold text-[#a39f90] uppercase tracking-[0.15em]">
+                    <span>{activeRoom?.name} · {activeRoomFurniture.length} pieces</span>
+                    {activeRoomFurniture.length > 0 && (
+                      <button
+                        onClick={() => window.dispatchEvent(new CustomEvent('open-batch-qr', { detail: activeRoomId }))}
+                        title="Print QR stickers for this room"
+                        className="text-[#7a8c4b] hover:text-[#5f6f36] hover:underline flex items-center gap-1 font-bold lowercase first-letter:uppercase"
+                      >
+                        <QrCode size={11} />
+                        print stickers
+                      </button>
+                    )}
                   </div>
                   {activeRoomFurniture.length === 0 && (
                     <div className="text-xs text-[#a39f90] text-center p-3 border border-dashed border-[#d6d1c2] rounded-lg">
@@ -273,6 +283,17 @@ export function Sidebar() {
                           )}
                         </div>
                         <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            title="Print QR Sticker"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.dispatchEvent(new CustomEvent('open-qr-label', { detail: f.id }));
+                            }}
+                            className="text-[#7a8c4b] hover:text-[#4a4a38] p-1.5 bg-white hover:bg-[#f2f6ee] border border-[#d6d1c2] rounded-md transition-colors"
+                          >
+                            <QrCode size={12} />
+                          </button>
                           <button
                             type="button"
                             title="View contents"
@@ -310,13 +331,23 @@ export function Sidebar() {
                   </span>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => window.dispatchEvent(new CustomEvent('open-furniture', { detail: activeFurn.id }))}
-                  className="w-full py-2.5 px-3 rounded-lg bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white flex items-center justify-center gap-2 text-xs font-semibold shadow-sm transition-colors"
-                >
-                  <span>📦</span> View & Manage Items ({getFurnitureItemCount(activeFurn.id)})
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new CustomEvent('open-furniture', { detail: activeFurn.id }))}
+                    className="flex-1 py-2 px-3 rounded-lg bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white flex items-center justify-center gap-1.5 text-xs font-semibold shadow-sm transition-colors"
+                  >
+                    <span>📦</span> Items ({getFurnitureItemCount(activeFurn.id)})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new CustomEvent('open-qr-label', { detail: activeFurn.id }))}
+                    className="px-3 py-2 rounded-lg bg-white hover:bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] flex items-center justify-center gap-1.5 text-xs font-semibold shadow-2xs transition-colors"
+                    title="Print QR Sticker"
+                  >
+                    <QrCode size={13} /> QR
+                  </button>
+                </div>
 
                 <input
                   className="bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-2 text-sm focus:border-[#8a9a5b] outline-none shadow-sm"
