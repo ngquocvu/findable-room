@@ -122,7 +122,9 @@ export function Sidebar() {
         />
       )}
 
-      <div
+      <aside
+        role="complementary"
+        aria-label={t.sidebar.yourRooms}
         className={`fixed inset-y-0 left-0 z-40 w-80 lg:w-84 xl:w-88 max-w-[85vw] bg-[#f9f7f2] border-r border-[#e5e1d8] flex flex-col h-full overflow-hidden text-[#4a4a38] transition-transform duration-300 ease-in-out md:static md:translate-x-0 shrink-0 ${
           mobileOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'
         }`}
@@ -130,7 +132,7 @@ export function Sidebar() {
         {/* Logo & Mobile Close */}
         <div className="p-4 sm:p-5 border-b border-[#e5e1d8] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#8a9a5b] flex items-center justify-center rounded-lg shadow-sm">
+            <div className="w-8 h-8 bg-[#8a9a5b] flex items-center justify-center rounded-lg shadow-sm" aria-hidden="true">
               <div className="w-4 h-4 bg-white rounded-sm opacity-80" />
             </div>
             <span className="text-lg font-bold tracking-tight text-[#4a4a38]" style={{ fontFamily: 'Georgia, serif' }}>
@@ -141,16 +143,19 @@ export function Sidebar() {
             onClick={() => setMobileOpen(false)}
             className="md:hidden text-[#a39f90] hover:text-[#4a4a38] p-1.5 rounded-lg hover:bg-[#f1eee6] transition-colors"
             title={language === 'vi' ? 'Đóng menu' : 'Close menu'}
+            aria-label={language === 'vi' ? 'Đóng menu' : 'Close menu'}
           >
             <X size={18} />
           </button>
         </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-[#e5e1d8] text-sm shrink-0">
+      <div role="tablist" aria-label="Sidebar Sections" className="flex border-b border-[#e5e1d8] text-sm shrink-0">
         {(['rooms', 'furniture'] as const).map(tab => (
           <button
             key={tab}
+            role="tab"
+            aria-selected={activeTab === tab}
             className={`flex-1 p-3 text-center transition-colors font-medium capitalize ${activeTab === tab ? 'border-b-2 border-[#8a9a5b] text-[#4a4a38]' : 'text-[#a39f90] hover:text-[#4a4a38]'}`}
             onClick={() => setActiveTab(tab)}
           >
@@ -176,13 +181,15 @@ export function Sidebar() {
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="truncate text-sm">{room.name}</span>
                       {roomFurnCount > 0 && (
-                        <span className="px-1.5 py-0.5 bg-[#8a9a5b] text-white text-[10px] font-bold rounded-full shrink-0">
+                        <span className="px-1.5 py-0.5 bg-[#8a9a5b] text-white text-[10px] font-bold rounded-full shrink-0" title={`${roomFurnCount} ${t.common.furniture.toLowerCase()}`}>
                           {roomFurnCount}
                         </span>
                       )}
                     </div>
                     <button
                       onClick={(e) => { e.stopPropagation(); deleteRoom(room.id); }}
+                      aria-label={`${t.common.delete} ${room.name}`}
+                      title={t.common.delete}
                       className="text-[#c0bdb4] hover:text-red-400 p-1 rounded hover:bg-red-50 shrink-0 transition-colors"
                     >
                       <Trash2 size={13} />
@@ -193,6 +200,7 @@ export function Sidebar() {
               <div className="flex gap-2 mt-1">
                 <button
                   onClick={handleAddRoom}
+                  aria-label={t.sidebar.newRoom}
                   className="flex-1 p-2.5 rounded-lg border border-dashed border-[#d6d1c2] text-[#a39f90] hover:text-[#8a9a5b] hover:border-[#8a9a5b] hover:bg-[#f5f3ee] flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors"
                 >
                   <Plus size={13} /> {t.sidebar.newRoom}
@@ -200,6 +208,7 @@ export function Sidebar() {
                 <button
                   onClick={() => importData(getDemoData(language))}
                   title={language === 'vi' ? 'Tải phòng mẫu có sẵn nội thất & đồ đạc' : 'Load sample room with furniture & items'}
+                  aria-label={language === 'vi' ? 'Tải phòng mẫu có sẵn nội thất & đồ đạc' : 'Load sample room with furniture & items'}
                   className="px-3 p-2.5 rounded-lg border border-[#d6d1c2] text-[#7a8c4b] hover:text-[#5f6f36] hover:border-[#8a9a5b] bg-white hover:bg-[#f2f6ee] flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors shadow-xs"
                 >
                   <Sparkles size={12} className="text-[#8a9a5b]" /> {t.sidebar.demo}
@@ -218,25 +227,26 @@ export function Sidebar() {
                   value={activeRoom.name}
                   onChange={(e) => updateRoom(activeRoom.id, { name: e.target.value })}
                   placeholder={t.sidebar.roomNamePlaceholder}
+                  aria-label={t.sidebar.roomNamePlaceholder}
                 />
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <label className="text-xs text-[#a39f90] block mb-1">{t.common.width} (m)</label>
-                    <input type="number" step="0.5" className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-1.5 outline-none focus:border-[#8a9a5b] shadow-sm" value={activeRoom.width} onChange={e => updateRoom(activeRoom.id, { width: parseFloat(e.target.value) || 1 })} />
+                    <label className="text-xs text-[#a39f90] block mb-1" htmlFor="room-width-input">{t.common.width} (m)</label>
+                    <input id="room-width-input" type="number" step="0.5" aria-label={`${t.common.width} (m)`} className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-1.5 outline-none focus:border-[#8a9a5b] shadow-sm" value={activeRoom.width} onChange={e => updateRoom(activeRoom.id, { width: parseFloat(e.target.value) || 1 })} />
                   </div>
                   <div>
-                    <label className="text-xs text-[#a39f90] block mb-1">{t.common.depth} (m)</label>
-                    <input type="number" step="0.5" className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-1.5 outline-none focus:border-[#8a9a5b] shadow-sm" value={activeRoom.depth} onChange={e => updateRoom(activeRoom.id, { depth: parseFloat(e.target.value) || 1 })} />
+                    <label className="text-xs text-[#a39f90] block mb-1" htmlFor="room-depth-input">{t.common.depth} (m)</label>
+                    <input id="room-depth-input" type="number" step="0.5" aria-label={`${t.common.depth} (m)`} className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-1.5 outline-none focus:border-[#8a9a5b] shadow-sm" value={activeRoom.depth} onChange={e => updateRoom(activeRoom.id, { depth: parseFloat(e.target.value) || 1 })} />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <label className="text-xs text-[#a39f90] block mb-1">{t.common.floorColor}</label>
-                    <input type="color" className="w-full h-8 bg-white border border-[#d6d1c2] rounded-lg cursor-pointer p-0.5 shadow-sm" value={activeRoom.floorColor} onChange={e => updateRoom(activeRoom.id, { floorColor: e.target.value })} />
+                    <label className="text-xs text-[#a39f90] block mb-1" htmlFor="room-floor-color">{t.common.floorColor}</label>
+                    <input id="room-floor-color" type="color" aria-label={t.common.floorColor} className="w-full h-8 bg-white border border-[#d6d1c2] rounded-lg cursor-pointer p-0.5 shadow-sm" value={activeRoom.floorColor} onChange={e => updateRoom(activeRoom.id, { floorColor: e.target.value })} />
                   </div>
                   <div>
-                    <label className="text-xs text-[#a39f90] block mb-1">{t.common.wallColor}</label>
-                    <input type="color" className="w-full h-8 bg-white border border-[#d6d1c2] rounded-lg cursor-pointer p-0.5 shadow-sm" value={activeRoom.wallColor} onChange={e => updateRoom(activeRoom.id, { wallColor: e.target.value })} />
+                    <label className="text-xs text-[#a39f90] block mb-1" htmlFor="room-wall-color">{t.common.wallColor}</label>
+                    <input id="room-wall-color" type="color" aria-label={t.common.wallColor} className="w-full h-8 bg-white border border-[#d6d1c2] rounded-lg cursor-pointer p-0.5 shadow-sm" value={activeRoom.wallColor} onChange={e => updateRoom(activeRoom.id, { wallColor: e.target.value })} />
                   </div>
                 </div>
               </div>
@@ -258,6 +268,8 @@ export function Sidebar() {
                   <button
                     className="w-full flex items-center justify-between text-[10px] font-semibold text-[#a39f90] uppercase tracking-[0.15em] mb-2 hover:text-[#8a9a5b] transition-colors"
                     onClick={() => setCatalogOpen(v => !v)}
+                    aria-expanded={catalogOpen}
+                    aria-label={t.sidebar.addFurniture}
                   >
                     <span className="flex items-center gap-1.5">
                       {t.sidebar.addFurniture}
@@ -273,6 +285,7 @@ export function Sidebar() {
                         <button
                           key={preset.id}
                           title={t.furniturePresets[preset.id]?.desc || preset.description}
+                          aria-label={`${t.sidebar.addFurniture} ${t.furniturePresets[preset.id]?.label || preset.label}`}
                           onClick={() => handleAddFurnitureType(preset.id)}
                           className="flex items-center gap-2 px-2.5 py-2 bg-white hover:bg-[#f5f3ee] border border-[#e5e1d8] hover:border-[#8a9a5b] rounded-lg transition-all group shadow-2xs text-left"
                         >
@@ -296,9 +309,10 @@ export function Sidebar() {
                       <button
                         onClick={() => window.dispatchEvent(new CustomEvent('open-batch-qr', { detail: activeRoomId }))}
                         title={t.sidebar.printStickers}
+                        aria-label={t.sidebar.printStickers}
                         className="shrink-0 whitespace-nowrap text-[#7a8c4b] hover:text-[#5f6f36] hover:underline flex items-center gap-1 font-bold lowercase first-letter:uppercase"
                       >
-                        <QrCode size={11} />
+                        <QrCode size={11} aria-hidden="true" />
                         {t.sidebar.printStickers}
                       </button>
                     )}
@@ -314,6 +328,16 @@ export function Sidebar() {
                     return (
                       <div
                         key={f.id}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${f.name}, ${itemCount} ${t.common.items.toLowerCase()}`}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setActiveFurniture(f.id);
+                            window.dispatchEvent(new CustomEvent('open-furniture', { detail: f.id }));
+                          }
+                        }}
                         className={`p-2.5 sm:p-3 rounded-xl flex items-center justify-between gap-2 cursor-pointer transition-all border ${
                           activeFurnitureId === f.id
                             ? 'bg-[#ece8df] border-[#8a9a5b] text-[#4a4a38] shadow-xs'
@@ -326,7 +350,7 @@ export function Sidebar() {
                         title={t.sidebar.viewItems}
                       >
                         <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                          <span className="text-lg shrink-0">{preset?.icon ?? '📦'}</span>
+                          <span className="text-lg shrink-0" aria-hidden="true">{preset?.icon ?? '📦'}</span>
                           <span className="truncate text-sm font-semibold text-[#4a4a38]">{f.name}</span>
                           {itemCount > 0 && (
                             <span
@@ -341,21 +365,23 @@ export function Sidebar() {
                           <button
                             type="button"
                             title={t.contentsModal.qrSticker}
+                            aria-label={`${t.contentsModal.qrSticker} - ${f.name}`}
                             onClick={(e) => {
                               e.stopPropagation();
                               window.dispatchEvent(new CustomEvent('open-qr-label', { detail: f.id }));
                             }}
                             className="text-[#7a8c4b] hover:text-[#5f6f36] p-1.5 bg-[#f9f7f2] hover:bg-[#f2f6ee] border border-[#d6d1c2] rounded-lg transition-colors"
                           >
-                            <QrCode size={13} />
+                            <QrCode size={13} aria-hidden="true" />
                           </button>
                           <button
                             type="button"
                             title={t.common.delete}
+                            aria-label={`${t.common.delete} ${f.name}`}
                             onClick={(e) => { e.stopPropagation(); deleteFurniture(f.id); }}
                             className="text-[#c0bdb4] hover:text-red-500 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
                           >
-                            <Trash2 size={13} />
+                            <Trash2 size={13} aria-hidden="true" />
                           </button>
                         </div>
                       </div>
@@ -370,15 +396,16 @@ export function Sidebar() {
               <div className="mt-2 pt-4 border-t border-[#e5e1d8] flex flex-col gap-3">
                 <div className="text-[10px] font-semibold text-[#a39f90] uppercase tracking-[0.15em] flex items-center justify-between">
                   <span className="flex items-center gap-1">
-                    <Settings2 size={11} /> {FURNITURE_PRESETS[activeFurn.type]?.icon} {t.furniturePresets[activeFurn.type]?.label || activeFurn.type}
+                    <Settings2 size={11} aria-hidden="true" /> {FURNITURE_PRESETS[activeFurn.type]?.icon} {t.furniturePresets[activeFurn.type]?.label || activeFurn.type}
                   </span>
                   <button
                     type="button"
                     onClick={() => setActiveFurniture(null)}
                     className="text-[#a39f90] hover:text-[#4a4a38] p-1 rounded hover:bg-[#ece8df] transition-colors"
                     title={t.common.cancel}
+                    aria-label={t.common.cancel}
                   >
-                    <X size={13} />
+                    <X size={13} aria-hidden="true" />
                   </button>
                 </div>
 
@@ -386,50 +413,92 @@ export function Sidebar() {
                   <button
                     type="button"
                     onClick={() => window.dispatchEvent(new CustomEvent('open-furniture', { detail: activeFurn.id }))}
+                    aria-label={`${t.sidebar.viewItems} (${getFurnitureItemCount(activeFurn.id)})`}
                     className="flex-1 py-2 px-3 rounded-lg bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white flex items-center justify-center gap-1.5 text-xs font-semibold shadow-sm transition-colors"
                   >
-                    <span>📦</span> {t.sidebar.viewItems} ({getFurnitureItemCount(activeFurn.id)})
+                    <span aria-hidden="true">📦</span> {t.sidebar.viewItems} ({getFurnitureItemCount(activeFurn.id)})
                   </button>
                   <button
                     type="button"
                     onClick={() => window.dispatchEvent(new CustomEvent('open-qr-label', { detail: activeFurn.id }))}
                     className="px-3 py-2 rounded-lg bg-white hover:bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] flex items-center justify-center gap-1.5 text-xs font-semibold shadow-2xs transition-colors"
                     title={t.contentsModal.qrSticker}
+                    aria-label={t.contentsModal.qrSticker}
                   >
-                    <QrCode size={13} /> QR
+                    <QrCode size={13} aria-hidden="true" /> QR
                   </button>
                 </div>
 
-                <input
-                  className="bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-2 text-sm focus:border-[#8a9a5b] outline-none shadow-sm"
-                  value={activeFurn.name}
-                  onChange={(e) => updateFurniture(activeFurn.id, { name: e.target.value })}
-                  placeholder={t.sidebar.furnitureNamePlaceholder}
-                />
                 <div>
-                  <label className="text-xs text-[#a39f90] block mb-1">{t.common.color}</label>
-                  <input type="color" className="w-full h-8 bg-white border border-[#d6d1c2] rounded-lg cursor-pointer p-0.5 shadow-sm" value={activeFurn.color} onChange={e => updateFurniture(activeFurn.id, { color: e.target.value })} />
+                  <label htmlFor="furn-name-input" className="text-xs text-[#a39f90] block mb-1">
+                    {t.common.name || 'Tên'}
+                  </label>
+                  <input
+                    id="furn-name-input"
+                    className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-2 text-sm focus:border-[#8a9a5b] outline-none shadow-sm"
+                    value={activeFurn.name}
+                    onChange={(e) => updateFurniture(activeFurn.id, { name: e.target.value })}
+                    placeholder={t.sidebar.furnitureNamePlaceholder}
+                    aria-label={t.sidebar.furnitureNamePlaceholder}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="furn-color-input" className="text-xs text-[#a39f90] block mb-1">{t.common.color}</label>
+                  <input
+                    id="furn-color-input"
+                    type="color"
+                    aria-label={t.common.color}
+                    className="w-full h-8 bg-white border border-[#d6d1c2] rounded-lg cursor-pointer p-0.5 shadow-sm"
+                    value={activeFurn.color}
+                    onChange={e => updateFurniture(activeFurn.id, { color: e.target.value })}
+                  />
                 </div>
                 <div className="text-xs text-[#a39f90] font-semibold mt-1">{t.common.position} (X / Z)</div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div>
-                    <label className="text-[10px] text-[#a39f90] block mb-1">X</label>
-                    <input type="number" step="0.25" className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-1.5 outline-none focus:border-[#8a9a5b] shadow-sm" value={activeFurn.position[0]} onChange={e => updateFurniture(activeFurn.id, { position: [parseFloat(e.target.value) || 0, 0, activeFurn.position[2]] })} />
+                    <label htmlFor="furn-pos-x" className="text-[10px] text-[#a39f90] block mb-1">X</label>
+                    <input
+                      id="furn-pos-x"
+                      type="number"
+                      step="0.25"
+                      aria-label="Tọa độ X (Position X)"
+                      className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-1.5 outline-none focus:border-[#8a9a5b] shadow-sm"
+                      value={activeFurn.position[0]}
+                      onChange={e => updateFurniture(activeFurn.id, { position: [parseFloat(e.target.value) || 0, 0, activeFurn.position[2]] })}
+                    />
                   </div>
                   <div>
-                    <label className="text-[10px] text-[#a39f90] block mb-1">Z</label>
-                    <input type="number" step="0.25" className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-1.5 outline-none focus:border-[#8a9a5b] shadow-sm" value={activeFurn.position[2]} onChange={e => updateFurniture(activeFurn.id, { position: [activeFurn.position[0], 0, parseFloat(e.target.value) || 0] })} />
+                    <label htmlFor="furn-pos-z" className="text-[10px] text-[#a39f90] block mb-1">Z</label>
+                    <input
+                      id="furn-pos-z"
+                      type="number"
+                      step="0.25"
+                      aria-label="Tọa độ Z (Position Z)"
+                      className="w-full bg-white border border-[#d6d1c2] text-[#4a4a38] rounded-lg p-1.5 outline-none focus:border-[#8a9a5b] shadow-sm"
+                      value={activeFurn.position[2]}
+                      onChange={e => updateFurniture(activeFurn.id, { position: [activeFurn.position[0], 0, parseFloat(e.target.value) || 0] })}
+                    />
                   </div>
                 </div>
-                <div className="text-xs text-[#a39f90] font-semibold mt-1">{t.common.rotation}</div>
-                <input
-                  type="range" min="-180" max="180" step="15"
-                  className="w-full accent-[#8a9a5b]"
-                  value={(activeFurn.rotation[1] * 180) / Math.PI}
-                  onChange={e => updateFurniture(activeFurn.id, { rotation: [0, (parseFloat(e.target.value) * Math.PI) / 180, 0] })}
-                />
-                <div className="text-center text-xs text-[#a39f90]">
-                  {Math.round((activeFurn.rotation[1] * 180) / Math.PI)}°
+                <div>
+                  <div className="flex items-center justify-between text-xs text-[#a39f90] font-semibold mt-1 mb-1">
+                    <label htmlFor="furn-rotation-slider">{t.common.rotation}</label>
+                    <span>{Math.round((activeFurn.rotation[1] * 180) / Math.PI)}°</span>
+                  </div>
+                  <input
+                    id="furn-rotation-slider"
+                    type="range"
+                    min="-180"
+                    max="180"
+                    step="15"
+                    aria-label={t.common.rotation}
+                    aria-valuemin={-180}
+                    aria-valuemax={180}
+                    aria-valuenow={Math.round((activeFurn.rotation[1] * 180) / Math.PI)}
+                    className="w-full accent-[#8a9a5b]"
+                    value={(activeFurn.rotation[1] * 180) / Math.PI}
+                    onChange={e => updateFurniture(activeFurn.id, { rotation: [0, (parseFloat(e.target.value) * Math.PI) / 180, 0] })}
+                  />
                 </div>
               </div>
             )}
@@ -439,15 +508,30 @@ export function Sidebar() {
 
       {/* Footer */}
       <div className="p-4 border-t border-[#e5e1d8] text-sm flex gap-3 shrink-0 bg-[#f5f3ee]">
-        <button onClick={handleExport} className="flex-1 py-2 px-3 rounded-lg bg-white hover:bg-[#f9f7f2] flex items-center justify-center gap-2 text-[#8a8678] hover:text-[#4a4a38] transition-colors border border-[#e5e1d8] shadow-sm">
-          <FolderUp size={14} /> {t.common.export}
+        <button
+          onClick={handleExport}
+          aria-label={t.common.export}
+          className="flex-1 py-2 px-3 rounded-lg bg-white hover:bg-[#f9f7f2] flex items-center justify-center gap-2 text-[#8a8678] hover:text-[#4a4a38] transition-colors border border-[#e5e1d8] shadow-sm"
+        >
+          <FolderUp size={14} aria-hidden="true" /> {t.common.export}
         </button>
-        <button onClick={() => fileInputRef.current?.click()} className="flex-1 py-2 px-3 rounded-lg bg-white hover:bg-[#f9f7f2] flex items-center justify-center gap-2 text-[#8a8678] hover:text-[#4a4a38] transition-colors border border-[#e5e1d8] shadow-sm">
-          <FolderDown size={14} /> {t.common.import}
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          aria-label={t.common.import}
+          className="flex-1 py-2 px-3 rounded-lg bg-white hover:bg-[#f9f7f2] flex items-center justify-center gap-2 text-[#8a8678] hover:text-[#4a4a38] transition-colors border border-[#e5e1d8] shadow-sm"
+        >
+          <FolderDown size={14} aria-hidden="true" /> {t.common.import}
         </button>
-        <input type="file" accept=".json" ref={fileInputRef} onChange={handleImport} className="hidden" />
+        <input
+          type="file"
+          accept=".json"
+          ref={fileInputRef}
+          onChange={handleImport}
+          className="hidden"
+          aria-label={t.common.import}
+        />
       </div>
-    </div>
+    </aside>
     </>
   );
 }

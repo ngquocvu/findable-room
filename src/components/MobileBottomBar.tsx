@@ -34,12 +34,13 @@ export function MobileBottomBar() {
         {/* Catalog / Sidebar Button */}
         <button
           onClick={openSidebar}
+          aria-label={t.sidebar.yourRooms}
           className="flex flex-col items-center justify-center p-2 rounded-xl text-xs font-medium hover:bg-[#f1eee6] active:scale-95 transition-all text-[#4a4a38] min-w-[56px] min-h-[44px]"
         >
           <div className="relative">
-            <Menu size={18} />
+            <Menu size={18} aria-hidden="true" />
             {roomFurnCount > 0 && (
-              <span className="absolute -top-1 -right-2 w-3.5 h-3.5 bg-[#8a9a5b] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-2 w-3.5 h-3.5 bg-[#8a9a5b] text-white text-[9px] font-bold rounded-full flex items-center justify-center" aria-hidden="true">
                 {roomFurnCount}
               </span>
             )}
@@ -50,27 +51,30 @@ export function MobileBottomBar() {
         {/* Search Button */}
         <button
           onClick={openSearch}
+          aria-label={t.mobileBottomBar.search}
           className="flex flex-col items-center justify-center p-2 rounded-xl text-xs font-medium hover:bg-[#f1eee6] active:scale-95 transition-all text-[#4a4a38] min-w-[56px] min-h-[44px]"
         >
-          <Search size={18} />
+          <Search size={18} aria-hidden="true" />
           <span className="text-[10px] mt-0.5 font-semibold">{t.mobileBottomBar.search}</span>
         </button>
 
         {/* QR Stickers Button */}
         <button
           onClick={openBatchQR}
+          aria-label={t.mobileBottomBar.qrLabels}
           className="flex flex-col items-center justify-center p-2 rounded-xl text-xs font-medium hover:bg-[#f1eee6] active:scale-95 transition-all text-[#7a8c4b] min-w-[56px] min-h-[44px]"
         >
-          <QrCode size={18} />
+          <QrCode size={18} aria-hidden="true" />
           <span className="text-[10px] mt-0.5 font-semibold">{t.mobileBottomBar.qrLabels}</span>
         </button>
 
         {/* Guide / Demo */}
         <button
           onClick={openWelcome}
+          aria-label={t.mobileBottomBar.guide}
           className="flex flex-col items-center justify-center p-2 rounded-xl text-xs font-medium hover:bg-[#f1eee6] active:scale-95 transition-all text-[#8a8678] min-w-[56px] min-h-[44px]"
         >
-          <Sparkles size={18} className="text-[#8a9a5b]" />
+          <Sparkles size={18} aria-hidden="true" className="text-[#8a9a5b]" />
           <span className="text-[10px] mt-0.5 font-semibold">{t.mobileBottomBar.guide}</span>
         </button>
       </nav>

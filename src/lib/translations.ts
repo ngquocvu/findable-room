@@ -10,6 +10,8 @@ export interface TranslationDictionary {
     qrLabels: string;
     guide: string;
     save: string;
+    close: string;
+    name: string;
     cancel: string;
     delete: string;
     edit: string;
@@ -139,6 +141,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       qrLabels: 'Tem mã QR',
       guide: 'Hướng dẫn',
       save: 'Lưu',
+      close: 'Đóng',
+      name: 'Tên',
       cancel: 'Huỷ',
       delete: 'Xoá',
       edit: 'Chỉnh sửa',
@@ -286,6 +290,8 @@ export const translations: Record<Language, TranslationDictionary> = {
       qrLabels: 'QR Labels',
       guide: 'Guide',
       save: 'Save',
+      close: 'Close',
+      name: 'Name',
       cancel: 'Cancel',
       delete: 'Delete',
       edit: 'Edit',

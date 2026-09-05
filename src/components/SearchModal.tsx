@@ -53,7 +53,12 @@ export function SearchModal() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-4 sm:pt-[10vh] bg-[#4a4a38]/30 backdrop-blur-sm p-3 sm:p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={t.common.search}
+          className="fixed inset-0 z-50 flex items-start justify-center pt-4 sm:pt-[10vh] bg-[#4a4a38]/30 backdrop-blur-sm p-3 sm:p-4"
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -61,11 +66,12 @@ export function SearchModal() {
             className="w-full max-w-2xl bg-[#fdfcf9] border border-[#e5e1d8] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh] sm:max-h-[80vh]"
           >
             <div className="flex items-center p-3.5 sm:p-4 border-b border-[#e5e1d8] gap-3 bg-white">
-              <Search className="text-[#a39f90] shrink-0" size={18} />
+              <Search className="text-[#a39f90] shrink-0" size={18} aria-hidden="true" />
               <input
                 id="search-input"
                 type="text"
                 placeholder={t.searchModal.searchInputPlaceholder}
+                aria-label={t.searchModal.searchInputPlaceholder}
                 className="flex-1 bg-transparent border-none outline-none text-sm sm:text-base text-[#4a4a38] placeholder-[#a39f90]"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -73,13 +79,18 @@ export function SearchModal() {
               {query && (
                 <button
                   onClick={() => setQuery('')}
+                  aria-label={t.searchModal.clearBtn}
                   className="text-xs text-[#a39f90] hover:text-[#4a4a38] px-1.5 py-0.5 rounded"
                 >
                   {t.searchModal.clearBtn}
                 </button>
               )}
-              <button onClick={() => setIsOpen(false)} className="text-[#a39f90] hover:text-[#4a4a38] bg-[#f1eee6] p-1.5 rounded-lg transition-colors">
-                <X size={18} />
+              <button
+                onClick={() => setIsOpen(false)}
+                aria-label={t.common.close}
+                className="text-[#a39f90] hover:text-[#4a4a38] bg-[#f1eee6] p-1.5 rounded-lg transition-colors"
+              >
+                <X size={18} aria-hidden="true" />
               </button>
             </div>
             
@@ -97,6 +108,15 @@ export function SearchModal() {
                   {results.map((res) => (
                     <div
                       key={res.item.id}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`${res.item.name}, ${res.room?.name || ''} ${res.furniture?.name || ''}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          navigateToItem(res.room?.id, res.furniture?.id);
+                        }
+                      }}
                       className="p-3 rounded-xl bg-[#fdfcf9] border border-[#e5e1d8] hover:border-[#8a9a5b] cursor-pointer flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 group transition-all shadow-sm"
                       onClick={() => navigateToItem(res.room?.id, res.furniture?.id)}
                     >
@@ -110,7 +130,7 @@ export function SearchModal() {
                         </div>
                       </div>
                       <div className="text-xs font-medium text-[#a39f90] flex items-center gap-1 group-hover:text-[#8a9a5b] transition-colors shrink-0">
-                        <MapPin size={12} />
+                        <MapPin size={12} aria-hidden="true" />
                         <span>{res.room?.name} › {res.furniture?.name}</span>
                       </div>
                     </div>

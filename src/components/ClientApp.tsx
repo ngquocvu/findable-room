@@ -18,6 +18,13 @@ export function ClientApp() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Sync document language attribute with active language state
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = language;
+    }
+  }, [language]);
+
+  useEffect(() => {
     setMounted(true);
     // If no room exists and user already dismissed welcome modal, create default
     const hasSeenWelcome = localStorage.getItem('roomfindable_welcomed');
@@ -39,20 +46,33 @@ export function ClientApp() {
   if (!mounted) return null;
 
   return (
-    <div className="flex h-screen w-full bg-[#fdfcf9] text-[#4a4a38] overflow-hidden font-sans select-none">
-       <Sidebar />
-       <div className="flex-1 flex flex-col relative overflow-hidden">
-          <TopBar />
-          <div className="flex-1 relative w-full h-full overflow-hidden">
-             <SceneContainer />
-          </div>
-       </div>
-       <SearchModal />
-       <FurnitureContentsModal />
-       <WelcomeModal />
-       <QRLabelModal />
-       <MobileScanViewModal />
-       <MobileBottomBar />
+    <div className="flex h-screen w-full bg-[#fdfcf9] text-[#4a4a38] overflow-hidden font-sans">
+      {/* WCAG 2.1 Level A 2.4.1 Bypass Blocks - Skip to Content */}
+      <a
+        href="#main-canvas"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-[#8a9a5b] focus:text-white focus:rounded-xl focus:shadow-2xl focus:font-semibold focus:outline-none"
+      >
+        {language === 'vi' ? 'Chuyển thẳng tới không gian 3D' : 'Skip to 3D room canvas'}
+      </a>
+
+      <Sidebar />
+      <div className="flex-1 flex flex-col relative overflow-hidden">
+        <TopBar />
+        <main
+          id="main-canvas"
+          tabIndex={-1}
+          aria-label={language === 'vi' ? 'Không gian 3D phòng' : '3D Room Scene'}
+          className="flex-1 relative w-full h-full overflow-hidden focus:outline-none"
+        >
+          <SceneContainer />
+        </main>
+      </div>
+      <SearchModal />
+      <FurnitureContentsModal />
+      <WelcomeModal />
+      <QRLabelModal />
+      <MobileScanViewModal />
+      <MobileBottomBar />
     </div>
   );
 }

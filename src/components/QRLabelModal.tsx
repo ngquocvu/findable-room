@@ -51,12 +51,18 @@ export function QRLabelModal() {
       setIsOpen(true);
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+
     window.addEventListener('open-qr-label', handleOpenSingle);
     window.addEventListener('open-batch-qr', handleOpenBatch);
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('open-qr-label', handleOpenSingle);
       window.removeEventListener('open-batch-qr', handleOpenBatch);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [activeRoomId]);
 
@@ -137,7 +143,12 @@ export function QRLabelModal() {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-[#4a4a38]/40 backdrop-blur-sm overflow-y-auto print:p-0 print:bg-white print:static print:inset-auto">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="qr-modal-title"
+        className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-[#4a4a38]/40 backdrop-blur-sm overflow-y-auto print:p-0 print:bg-white print:static print:inset-auto"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -147,13 +158,13 @@ export function QRLabelModal() {
           {/* Header - Hidden in Print */}
           <div className="p-3.5 sm:p-5 border-b border-[#e5e1d8] flex items-center justify-between bg-white shrink-0 print:hidden">
             <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] rounded-xl flex items-center justify-center shadow-xs shrink-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] rounded-xl flex items-center justify-center shadow-xs shrink-0" aria-hidden="true">
                 <QrCode size={18} className="sm:size-5" />
               </div>
               <div>
-                <h3 className="text-sm sm:text-base font-bold text-[#4a4a38] leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                <h2 id="qr-modal-title" className="text-sm sm:text-base font-bold text-[#4a4a38] leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                   {batchMode ? t.qrLabelModal.batchTitle : t.qrLabelModal.singleTitle}
-                </h3>
+                </h2>
                 <p className="text-[11px] sm:text-xs text-[#8a8678] line-clamp-1">
                   {t.qrLabelModal.scanHelper}
                 </p>
@@ -163,17 +174,19 @@ export function QRLabelModal() {
             <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={handlePrint}
+                aria-label={t.qrLabelModal.printStickersBtn}
                 className="px-3 sm:px-4 py-2 bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all hover:shadow"
               >
-                <Printer size={14} />
+                <Printer size={14} aria-hidden="true" />
                 <span className="hidden sm:inline">{t.qrLabelModal.printStickersBtn}</span>
                 <span className="sm:hidden">{t.common.print}</span>
               </button>
               <button
                 onClick={() => setIsOpen(false)}
+                aria-label={t.common.close}
                 className="text-[#a39f90] hover:text-[#4a4a38] bg-[#f1eee6] p-1.5 sm:p-2 rounded-xl transition-colors"
               >
-                <X size={16} />
+                <X size={16} aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -183,12 +196,13 @@ export function QRLabelModal() {
             {/* Style Selector */}
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[#8a8678] uppercase text-[10px] tracking-wider flex items-center gap-1">
-                <SlidersHorizontal size={11} /> {t.qrLabelModal.labelSize}
+                <SlidersHorizontal size={11} aria-hidden="true" /> {t.qrLabelModal.labelSize}
               </span>
               {(['detailed', 'standard', 'compact'] as const).map((style) => (
                 <button
                   key={style}
                   onClick={() => setLabelStyle(style)}
+                  aria-pressed={labelStyle === style}
                   className={`px-2.5 py-1.5 rounded-lg font-medium capitalize transition-all ${
                     labelStyle === style
                       ? 'bg-white text-[#4a4a38] shadow-xs border border-[#d6d1c2] font-semibold'
@@ -339,17 +353,19 @@ export function QRLabelModal() {
                           <button
                             onClick={() => handleCopyLink(idx, label.deepLink)}
                             title={t.common.copied}
+                            aria-label={`${t.common.link} - ${label.furniture.name}`}
                             className="p-1 text-[#8a8678] hover:text-[#4a4a38] hover:bg-[#f5f3ee] rounded transition-colors flex items-center gap-0.5"
                           >
-                            {copiedIndex === idx ? <Check size={11} className="text-green-600" /> : <Copy size={11} />}
+                            {copiedIndex === idx ? <Check size={11} aria-hidden="true" className="text-green-600" /> : <Copy size={11} aria-hidden="true" />}
                             <span className="text-[9px]">{copiedIndex === idx ? t.common.copied : t.common.link}</span>
                           </button>
                           <button
                             onClick={() => handleDownloadSinglePNG(label)}
                             title="Download PNG"
+                            aria-label={`Download PNG - ${label.furniture.name}`}
                             className="p-1 text-[#8a8678] hover:text-[#4a4a38] hover:bg-[#f5f3ee] rounded transition-colors flex items-center gap-0.5"
                           >
-                            <Download size={11} />
+                            <Download size={11} aria-hidden="true" />
                             <span className="text-[9px]">PNG</span>
                           </button>
                         </div>
@@ -364,16 +380,17 @@ export function QRLabelModal() {
           {/* Bottom Footer Helper Info - Hidden in Print */}
           <div className="p-4 bg-white border-t border-[#e5e1d8] flex items-center justify-between text-xs text-[#8a8678] shrink-0 print:hidden">
             <div className="flex items-center gap-1.5 text-[11px]">
-              <Sparkles size={13} className="text-[#8a9a5b]" />
+              <Sparkles size={13} aria-hidden="true" className="text-[#8a9a5b]" />
               <span>
                 {t.qrLabelModal.printingTip}
               </span>
             </div>
             <button
               onClick={handlePrint}
+              aria-label={t.qrLabelModal.printNow}
               className="px-4 py-2 bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
             >
-              <Printer size={14} /> {t.qrLabelModal.printNow}
+              <Printer size={14} aria-hidden="true" /> {t.qrLabelModal.printNow}
             </button>
           </div>
         </motion.div>

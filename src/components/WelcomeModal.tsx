@@ -21,9 +21,16 @@ export function WelcomeModal() {
     }
 
     const handleOpen = () => setIsOpen(true);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
     window.addEventListener('open-welcome', handleOpen);
-    return () => window.removeEventListener('open-welcome', handleOpen);
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('open-welcome', handleOpen);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [dontShowAgain]);
 
   const handleClose = () => {
     if (dontShowAgain) {
@@ -61,7 +68,12 @@ export function WelcomeModal() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="welcome-modal-title"
+      className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200"
+    >
       <div
         className="bg-[#fdfcf9] border border-[#e5e1d8] rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden text-[#4a4a38] relative animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
@@ -70,15 +82,16 @@ export function WelcomeModal() {
         <div className="bg-gradient-to-r from-[#8a9a5b] to-[#a3b18a] px-5 sm:px-6 py-5 sm:py-6 text-white relative shrink-0">
           <button
             onClick={handleClose}
+            aria-label={t.common.close}
             className="absolute top-4 right-4 text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
           >
-            <X size={18} />
+            <X size={18} aria-hidden="true" />
           </button>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wide uppercase mb-2 backdrop-blur-xs">
-            <Sparkles size={12} />
+            <Sparkles size={12} aria-hidden="true" />
             <span>{t.welcomeModal.smartInventoryBadge}</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+          <h2 id="welcome-modal-title" className="text-xl sm:text-2xl font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
             {t.welcomeModal.title}
           </h2>
           <p className="text-white/90 text-xs sm:text-sm mt-1 max-w-md">
@@ -90,7 +103,7 @@ export function WelcomeModal() {
         <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="p-3.5 bg-[#f5f3ee] rounded-xl border border-[#e5e1d8] flex flex-col gap-1.5">
-              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-[#8a9a5b] shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-[#8a9a5b] shadow-xs" aria-hidden="true">
                 <Move3d size={18} />
               </div>
               <h3 className="font-semibold text-xs text-[#4a4a38]">{t.welcomeModal.step1Title}</h3>
@@ -100,7 +113,7 @@ export function WelcomeModal() {
             </div>
 
             <div className="p-3.5 bg-[#f5f3ee] rounded-xl border border-[#e5e1d8] flex flex-col gap-1.5">
-              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-[#8a9a5b] shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-[#8a9a5b] shadow-xs" aria-hidden="true">
                 <Box size={18} />
               </div>
               <h3 className="font-semibold text-xs text-[#4a4a38]">{t.welcomeModal.step2Title}</h3>
@@ -110,7 +123,7 @@ export function WelcomeModal() {
             </div>
 
             <div className="p-3.5 bg-[#f5f3ee] rounded-xl border border-[#e5e1d8] flex flex-col gap-1.5">
-              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-[#8a9a5b] shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-[#8a9a5b] shadow-xs" aria-hidden="true">
                 <Search size={18} />
               </div>
               <h3 className="font-semibold text-xs text-[#4a4a38]">{t.welcomeModal.step3Title}</h3>
@@ -129,13 +142,14 @@ export function WelcomeModal() {
               {/* Option A: Demo Room */}
               <button
                 onClick={handleLoadDemo}
+                aria-label={`${t.welcomeModal.loadDemoTitle}: ${t.welcomeModal.loadDemoDesc}`}
                 className="flex flex-col items-start p-4 rounded-xl border-2 border-[#8a9a5b] bg-[#f2f6ee] hover:bg-[#eaf1e4] text-left transition-all group relative shadow-sm"
               >
                 <div className="flex items-center justify-between w-full mb-1.5">
                   <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#6f7e45] uppercase tracking-wide">
-                    <Sparkles size={12} /> {t.welcomeModal.recommended}
+                    <Sparkles size={12} aria-hidden="true" /> {t.welcomeModal.recommended}
                   </span>
-                  <ArrowRight size={14} className="text-[#8a9a5b] group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={14} aria-hidden="true" className="text-[#8a9a5b] group-hover:translate-x-1 transition-transform" />
                 </div>
                 <div className="font-bold text-sm text-[#4a4a38] group-hover:text-[#323223]">
                   {t.welcomeModal.loadDemoTitle}
@@ -148,13 +162,14 @@ export function WelcomeModal() {
               {/* Option B: Blank Room */}
               <button
                 onClick={handleStartFresh}
+                aria-label={`${t.welcomeModal.startFreshTitle}: ${t.welcomeModal.startFreshDesc}`}
                 className="flex flex-col items-start p-4 rounded-xl border border-[#d6d1c2] bg-white hover:bg-[#f9f7f2] text-left transition-all group shadow-sm"
               >
                 <div className="flex items-center justify-between w-full mb-1.5">
                   <span className="text-[11px] font-semibold text-[#a39f90] uppercase tracking-wide">
                     {t.welcomeModal.emptyCanvas}
                   </span>
-                  <ArrowRight size={14} className="text-[#a39f90] group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={14} aria-hidden="true" className="text-[#a39f90] group-hover:translate-x-1 transition-transform" />
                 </div>
                 <div className="font-bold text-sm text-[#4a4a38]">
                   {t.welcomeModal.startFreshTitle}

@@ -66,6 +66,15 @@ export function MobileScanViewModal() {
       setSnapshot(urlSnapshot);
       setIsOpen(true);
     }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [furniture, rooms, setActiveRoom, setActiveFurniture]);
 
   const handleClose = () => {
@@ -155,7 +164,12 @@ export function MobileScanViewModal() {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#4a4a38]/40 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="scan-modal-title"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#4a4a38]/40 backdrop-blur-sm"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.94, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -165,43 +179,49 @@ export function MobileScanViewModal() {
           {/* Header */}
           <div className="p-5 border-b border-[#e5e1d8] bg-white flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] rounded-xl flex items-center justify-center text-2xl shadow-xs">
+              <div className="w-12 h-12 bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] rounded-xl flex items-center justify-center text-2xl shadow-xs" aria-hidden="true">
                 {preset?.icon ?? '📦'}
               </div>
               <div>
                 <span className="text-[10px] font-bold text-[#8a9a5b] uppercase tracking-wider">
                   {t.mobileScanModal.scannedBoxBadge}
                 </span>
-                <h3 className="text-lg font-bold text-[#323223] leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                <h2 id="scan-modal-title" className="text-lg font-bold text-[#323223] leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                   {snapshot.furnitureName}
-                </h3>
+                </h2>
                 <div className="text-xs text-[#8a8678] flex items-center gap-1 mt-0.5">
-                  <MapPin size={12} /> {snapshot.roomName} · {snapshot.items.length} {t.common.items.toLowerCase()}
+                  <MapPin size={12} aria-hidden="true" /> {snapshot.roomName} · {snapshot.items.length} {t.common.items.toLowerCase()}
                 </div>
               </div>
             </div>
 
             <button
               onClick={handleClose}
+              aria-label={t.common.close}
               className="text-[#a39f90] hover:text-[#4a4a38] bg-[#f1eee6] p-2 rounded-xl transition-colors"
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
 
           {/* Search inside box */}
           <div className="p-3 border-b border-[#e5e1d8] bg-[#f9f7f2] flex items-center gap-2">
-            <Search size={14} className="text-[#a39f90] ml-1" />
+            <Search size={14} className="text-[#a39f90] ml-1" aria-hidden="true" />
             <input
               type="text"
               placeholder={t.mobileScanModal.searchInBox}
+              aria-label={t.mobileScanModal.searchInBox}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="w-full bg-transparent text-xs text-[#4a4a38] placeholder-[#a39f90] outline-none"
             />
             {query && (
-              <button onClick={() => setQuery('')} className="text-[#a39f90] hover:text-[#4a4a38]">
-                <X size={12} />
+              <button
+                onClick={() => setQuery('')}
+                aria-label={t.searchModal.clearBtn}
+                className="text-[#a39f90] hover:text-[#4a4a38]"
+              >
+                <X size={12} aria-hidden="true" />
               </button>
             )}
           </div>
@@ -220,14 +240,14 @@ export function MobileScanViewModal() {
                 >
                   <div>
                     <div className="text-sm font-semibold text-[#4a4a38] flex items-center gap-2">
-                      <span>{CATEGORY_ICONS[item.category] || '📦'}</span>
+                      <span aria-hidden="true">{CATEGORY_ICONS[item.category] || '📦'}</span>
                       {item.name}
                       {item.quantity > 1 && (
                         <span className="text-[#8a9a5b] text-xs font-bold">×{item.quantity}</span>
                       )}
                     </div>
                     <div className="text-[10px] text-[#a39f90] uppercase tracking-wide mt-1 flex items-center gap-1.5 flex-wrap">
-                      <Tag size={9} /> {t.categories[item.category as ItemCategory] || item.category}
+                      <Tag size={9} aria-hidden="true" /> {t.categories[item.category as ItemCategory] || item.category}
                       {item.tags && item.tags.length > 0 && (
                         <span className="text-[#8a8678]">· {item.tags.join(', ')}</span>
                       )}
@@ -242,23 +262,25 @@ export function MobileScanViewModal() {
           <div className="p-4 bg-white border-t border-[#e5e1d8] flex flex-col gap-2">
             <button
               onClick={handleViewIn3D}
+              aria-label={t.mobileScanModal.openIn3D}
               className="w-full py-2.5 px-4 bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
             >
-              <Eye size={14} /> {t.mobileScanModal.openIn3D}
+              <Eye size={14} aria-hidden="true" /> {t.mobileScanModal.openIn3D}
             </button>
 
             {!imported && (
               <button
                 onClick={handleImportSnapshot}
+                aria-label={t.mobileScanModal.saveContainer}
                 className="w-full py-2 px-4 bg-[#f5f3ee] hover:bg-[#ede9df] text-[#4a4a38] border border-[#d6d1c2] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Download size={13} /> {t.mobileScanModal.saveContainer}
+                <Download size={13} aria-hidden="true" /> {t.mobileScanModal.saveContainer}
               </button>
             )}
 
             {imported && (
               <div className="text-center text-[11px] text-[#5e6c38] font-semibold flex items-center justify-center gap-1">
-                <Check size={13} /> {t.mobileScanModal.savedSuccess}
+                <Check size={13} aria-hidden="true" /> {t.mobileScanModal.savedSuccess}
               </div>
             )}
           </div>
