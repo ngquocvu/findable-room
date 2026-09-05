@@ -9,6 +9,7 @@ import { Printer, Download, Copy, Check, X, QrCode, Sparkles, SlidersHorizontal,
 import { motion, AnimatePresence } from 'motion/react';
 import { getTranslation } from '@/src/lib/translations';
 import { FurnitureIcon } from '@/src/components/FurnitureIcon';
+import { LogoIcon } from '@/src/components/Logo';
 
 export type LabelStyle = 'detailed' | 'standard' | 'compact';
 
@@ -346,7 +347,8 @@ export function QRLabelModal() {
 
                       {/* Footer: Branding & Screen actions */}
                       <div className="mt-2 pt-2 border-t border-[#f1eee6] flex items-center justify-between text-[9px] text-[#a39f90] print:border-black/20 print:text-black">
-                        <span className="font-semibold tracking-wider uppercase" style={{ fontFamily: 'Georgia, serif' }}>
+                        <span className="inline-flex items-center gap-1 font-semibold tracking-wider uppercase text-[#6f7e45] print:text-black" style={{ fontFamily: 'Georgia, serif' }}>
+                          <LogoIcon size={12} />
                           RoomFindable
                         </span>
 

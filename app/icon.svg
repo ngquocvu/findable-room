@@ -1,0 +1,36 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wall-left-grad" x1="6" y1="12" x2="24" y2="38" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#72834b" />
+      <stop offset="100%" stop-color="#556434" />
+    </linearGradient>
+    <linearGradient id="wall-right-grad" x1="24" y1="12" x2="42" y2="38" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#9fb074" />
+      <stop offset="100%" stop-color="#7a8d51" />
+    </linearGradient>
+    <linearGradient id="floor-grad" x1="24" y1="20" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ede7dc" />
+      <stop offset="100%" stop-color="#dcd4c5" />
+    </linearGradient>
+    <linearGradient id="pin-grad" x1="24" y1="8" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+
+  <!-- Isometric Floor -->
+  <path d="M24 24L40 33L24 42L8 33L24 24Z" fill="url(#floor-grad)" stroke="#c8bfb0" stroke-width="1.2" stroke-linejoin="round"/>
+  
+  <!-- Left Wall -->
+  <path d="M8 15L24 24V42L8 33V15Z" fill="url(#wall-left-grad)" stroke="#475429" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M11 20L19 24.5V28.5L11 24V20Z" fill="#445226" opacity="0.75"/>
+
+  <!-- Right Wall -->
+  <path d="M40 15L24 24V42L40 33V15Z" fill="url(#wall-right-grad)" stroke="#5d6c38" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M37 20L29 24.5V28.5L37 24V20Z" fill="#6b7c44" opacity="0.75"/>
+
+  <!-- Pin & Beacon -->
+  <ellipse cx="24" cy="27" rx="6" ry="3" fill="none" stroke="#d97706" stroke-width="1" opacity="0.4"/>
+  <path d="M24 10C21.79 10 20 11.79 20 14C20 16.8 24 21.5 24 21.5C24 21.5 28 16.8 28 14C28 11.79 26.21 10 24 10Z" fill="url(#pin-grad)" stroke="#b45309" stroke-width="0.8"/>
+  <circle cx="24" cy="14" r="1.8" fill="#fffdfa"/>
+</svg>

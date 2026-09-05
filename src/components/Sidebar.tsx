@@ -10,6 +10,7 @@ import { FurnitureType } from '@/src/types';
 import { getTranslation } from '@/src/lib/translations';
 import { useFeatureFlags } from '@/src/store/useFeatureFlags';
 import { FurnitureIcon } from '@/src/components/FurnitureIcon';
+import { Logo } from '@/src/components/Logo';
 
 export function Sidebar() {
   const store = useStore();
@@ -134,14 +135,7 @@ export function Sidebar() {
       >
         {/* Logo & Mobile Close */}
         <div className="p-4 sm:p-5 border-b border-[#e5e1d8] flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#8a9a5b] flex items-center justify-center rounded-lg shadow-sm" aria-hidden="true">
-              <div className="w-4 h-4 bg-white rounded-sm opacity-80" />
-            </div>
-            <span className="text-lg font-bold tracking-tight text-[#4a4a38]" style={{ fontFamily: 'Georgia, serif' }}>
-              RoomFindable
-            </span>
-          </div>
+          <Logo variant="full" size="md" />
           <button
             onClick={() => setMobileOpen(false)}
             className="md:hidden text-[#a39f90] hover:text-[#4a4a38] p-1.5 rounded-lg hover:bg-[#f1eee6] transition-colors"

@@ -4,6 +4,7 @@ import { useStore } from '@/src/store/useStore';
 import { getTranslation } from '@/src/lib/translations';
 import { Search, Sparkles, QrCode, Menu, Globe } from 'lucide-react';
 import { useEffect } from 'react';
+import { LogoIcon } from '@/src/components/Logo';
 
 export function TopBar() {
   const { rooms, activeRoomId, language, setLanguage } = useStore();
@@ -51,14 +52,19 @@ export function TopBar() {
           <Menu size={20} aria-hidden="true" />
         </button>
 
-        <h1 className="text-sm sm:text-base font-bold text-[#4a4a38] truncate" style={{ fontFamily: 'Georgia, serif' }}>
-          {activeRoom ? activeRoom.name : 'RoomFindable'}
-        </h1>
-        {activeRoom && (
-          <span className="text-[10px] sm:text-xs text-[#8a8678] shrink-0 bg-[#ece8df]/70 px-2 py-0.5 rounded-md font-medium">
-            {activeRoom.width}m × {activeRoom.depth}m
-          </span>
-        )}
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="hidden sm:flex items-center justify-center shrink-0">
+            <LogoIcon size={22} />
+          </div>
+          <h1 className="text-sm sm:text-base font-bold text-[#4a4a38] truncate" style={{ fontFamily: 'Georgia, serif' }}>
+            {activeRoom ? activeRoom.name : 'RoomFindable'}
+          </h1>
+          {activeRoom && (
+            <span className="text-[10px] sm:text-xs text-[#8a8678] shrink-0 bg-[#ece8df]/70 px-2 py-0.5 rounded-md font-medium">
+              {activeRoom.width}m × {activeRoom.depth}m
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">

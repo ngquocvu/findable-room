@@ -6,6 +6,7 @@ import { getDemoData } from '@/src/lib/demoData';
 import { Sparkles, Box, Search, Move3d, X, ArrowRight, QrCode, RotateCw, Hand, ZoomIn } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { getTranslation } from '@/src/lib/translations';
+import { LogoIcon } from '@/src/components/Logo';
 
 export function WelcomeModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,7 +80,22 @@ export function WelcomeModal() {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header decoration */}
-        <div className="bg-gradient-to-r from-[#8a9a5b] to-[#a3b18a] px-5 sm:px-6 py-5 sm:py-6 text-white relative shrink-0">
+        <div className="bg-gradient-to-r from-[#8a9a5b] to-[#a3b18a] px-5 sm:px-6 py-5 sm:py-6 text-white relative shrink-0 flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wide uppercase mb-2 backdrop-blur-xs">
+              <Sparkles size={12} aria-hidden="true" />
+              <span>{t.welcomeModal.smartInventoryBadge}</span>
+            </div>
+            <h2 id="welcome-modal-title" className="text-xl sm:text-2xl font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
+              {t.welcomeModal.title}
+            </h2>
+            <p className="text-white/90 text-xs sm:text-sm mt-1 max-w-md">
+              {t.welcomeModal.subtitle}
+            </p>
+          </div>
+          <div className="hidden sm:flex p-2.5 bg-white/15 backdrop-blur-xs rounded-2xl border border-white/20 shadow-sm shrink-0 items-center justify-center">
+            <LogoIcon size={44} />
+          </div>
           <button
             onClick={handleClose}
             aria-label={t.common.close}
@@ -87,16 +103,6 @@ export function WelcomeModal() {
           >
             <X size={18} aria-hidden="true" />
           </button>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wide uppercase mb-2 backdrop-blur-xs">
-            <Sparkles size={12} aria-hidden="true" />
-            <span>{t.welcomeModal.smartInventoryBadge}</span>
-          </div>
-          <h2 id="welcome-modal-title" className="text-xl sm:text-2xl font-bold tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
-            {t.welcomeModal.title}
-          </h2>
-          <p className="text-white/90 text-xs sm:text-sm mt-1 max-w-md">
-            {t.welcomeModal.subtitle}
-          </p>
         </div>
 
         {/* Content list */}

@@ -1,0 +1,23 @@
+{
+  "name": "RoomFindable - 3D Room Storage & Inventory Finder",
+  "short_name": "RoomFindable",
+  "description": "Visually design your room in 3D, remember where every single item is stored, and find anything in seconds with QR stickers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fdfcf9",
+  "theme_color": "#8a9a5b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml",
+      "purpose": "maskable any"
+    }
+  ]
+}
