@@ -9,11 +9,12 @@ import { FurnitureContentsModal } from './FurnitureContentsModal';
 import { WelcomeModal } from './WelcomeModal';
 import { QRLabelModal } from './QRLabelModal';
 import { MobileScanViewModal } from './MobileScanViewModal';
+import { MobileBottomBar } from './MobileBottomBar';
 import { useStore } from '@/src/store/useStore';
 import { v4 as uuidv4 } from 'uuid';
 
 export function ClientApp() {
-  const { rooms, addRoom, setActiveRoom } = useStore();
+  const { rooms, addRoom, setActiveRoom, language } = useStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export function ClientApp() {
     if (rooms.length === 0 && hasSeenWelcome) {
       const defaultRoom = {
         id: uuidv4(),
-        name: 'My First Room',
+        name: language === 'vi' ? 'Phòng đầu tiên của tôi' : 'My First Room',
         width: 5,
         depth: 5,
         height: 2.8,
@@ -51,6 +52,7 @@ export function ClientApp() {
        <WelcomeModal />
        <QRLabelModal />
        <MobileScanViewModal />
+       <MobileBottomBar />
     </div>
   );
 }

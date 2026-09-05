@@ -64,7 +64,8 @@ export function DragController() {
       if (!dragState.isDragging) {
         const dx = e.clientX - dragState.startPointerPos.x;
         const dy = e.clientY - dragState.startPointerPos.y;
-        if (Math.hypot(dx, dy) < 6) {
+        const threshold = e.pointerType === 'touch' ? 16 : 6;
+        if (Math.hypot(dx, dy) < threshold) {
           return;
         }
         dragState.isDragging = true;

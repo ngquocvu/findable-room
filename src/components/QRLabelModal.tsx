@@ -7,6 +7,7 @@ import { FURNITURE_PRESETS } from '@/src/lib/furniturePresets';
 import { buildContainerDeepLink, generateQRCodeDataURL } from '@/src/lib/qrCode';
 import { Printer, Download, Copy, Check, X, QrCode, Sparkles, SlidersHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { getTranslation } from '@/src/lib/translations';
 
 export type LabelStyle = 'detailed' | 'standard' | 'compact';
 
@@ -28,7 +29,8 @@ export function QRLabelModal() {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { rooms, furniture, items, activeRoomId } = useStore();
+  const { rooms, furniture, items, activeRoomId, language } = useStore();
+  const t = getTranslation(language);
   const printAreaRef = useRef<HTMLDivElement>(null);
 
   // Listen for open events
@@ -86,7 +88,7 @@ export function QRLabelModal() {
       targets.map(async (f) => {
         const room = rooms.find(r => r.id === f.roomId) || {
           id: f.roomId,
-          name: 'Room',
+          name: language === 'vi' ? 'Phòng' : 'Room',
           width: 5,
           depth: 5,
           height: 3,
@@ -112,7 +114,7 @@ export function QRLabelModal() {
       setLabels(generated);
       setLoading(false);
     });
-  }, [isOpen, batchMode, targetFurnitureId, targetRoomId, furniture, rooms, items]);
+  }, [isOpen, batchMode, targetFurnitureId, targetRoomId, furniture, rooms, items, language]);
 
   const handlePrint = () => {
     window.print();
@@ -135,39 +137,41 @@ export function QRLabelModal() {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#4a4a38]/40 backdrop-blur-sm overflow-y-auto print:p-0 print:bg-white print:static print:inset-auto">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-[#4a4a38]/40 backdrop-blur-sm overflow-y-auto print:p-0 print:bg-white print:static print:inset-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 10 }}
-          className="w-full max-w-4xl bg-[#fdfcf9] border border-[#e5e1d8] rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden print:border-none print:shadow-none print:max-h-none print:max-w-none print:w-full print:rounded-none"
+          className="w-full max-w-4xl bg-[#fdfcf9] border border-[#e5e1d8] rounded-2xl shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[90vh] overflow-hidden print:border-none print:shadow-none print:max-h-none print:max-w-none print:w-full print:rounded-none"
         >
           {/* Header - Hidden in Print */}
-          <div className="p-5 border-b border-[#e5e1d8] flex items-center justify-between bg-white shrink-0 print:hidden">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] rounded-xl flex items-center justify-center shadow-xs">
-                <QrCode size={20} />
+          <div className="p-3.5 sm:p-5 border-b border-[#e5e1d8] flex items-center justify-between bg-white shrink-0 print:hidden">
+            <div className="flex items-center gap-2.5 sm:gap-3">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2] rounded-xl flex items-center justify-center shadow-xs shrink-0">
+                <QrCode size={18} className="sm:size-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-[#4a4a38]" style={{ fontFamily: 'Georgia, serif' }}>
-                  {batchMode ? 'Print Storage Stickers Sheet' : 'Print Container QR Sticker'}
+                <h3 className="text-sm sm:text-base font-bold text-[#4a4a38] leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+                  {batchMode ? t.qrLabelModal.batchTitle : t.qrLabelModal.singleTitle}
                 </h3>
-                <p className="text-xs text-[#8a8678]">
-                  Scan with your phone to immediately view & find stored items
+                <p className="text-[11px] sm:text-xs text-[#8a8678] line-clamp-1">
+                  {t.qrLabelModal.scanHelper}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={handlePrint}
-                className="px-4 py-2 bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all hover:shadow"
+                className="px-3 sm:px-4 py-2 bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all hover:shadow"
               >
-                <Printer size={15} /> Print Stickers
+                <Printer size={14} />
+                <span className="hidden sm:inline">{t.qrLabelModal.printStickersBtn}</span>
+                <span className="sm:hidden">{t.common.print}</span>
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-[#a39f90] hover:text-[#4a4a38] bg-[#f1eee6] p-2 rounded-xl transition-colors"
+                className="text-[#a39f90] hover:text-[#4a4a38] bg-[#f1eee6] p-1.5 sm:p-2 rounded-xl transition-colors"
               >
                 <X size={16} />
               </button>
@@ -179,7 +183,7 @@ export function QRLabelModal() {
             {/* Style Selector */}
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[#8a8678] uppercase text-[10px] tracking-wider flex items-center gap-1">
-                <SlidersHorizontal size={11} /> Label Size:
+                <SlidersHorizontal size={11} /> {t.qrLabelModal.labelSize}
               </span>
               {(['detailed', 'standard', 'compact'] as const).map((style) => (
                 <button
@@ -191,16 +195,16 @@ export function QRLabelModal() {
                       : 'text-[#8a8678] hover:text-[#4a4a38]'
                   }`}
                 >
-                  {style === 'detailed' && 'Detailed List'}
-                  {style === 'standard' && 'Standard Bin'}
-                  {style === 'compact' && 'Compact Mini'}
+                  {style === 'detailed' && t.qrLabelModal.styleDetailed}
+                  {style === 'standard' && t.qrLabelModal.styleStandard}
+                  {style === 'compact' && t.qrLabelModal.styleCompact}
                 </button>
               ))}
             </div>
 
             {/* Scope / Summary */}
             <div className="text-[#8a8678] text-[11px] font-medium">
-              {labels.length} sticker{labels.length === 1 ? '' : 's'} ready
+              {labels.length} {t.qrLabelModal.stickersReady}
             </div>
           </div>
 
@@ -213,11 +217,13 @@ export function QRLabelModal() {
             {loading ? (
               <div className="flex flex-col items-center justify-center p-12 text-[#8a8678] gap-3">
                 <div className="w-8 h-8 border-2 border-[#8a9a5b] border-t-transparent rounded-full animate-spin" />
-                <span className="text-xs font-medium">Generating high-res QR codes...</span>
+                <span className="text-xs font-medium">
+                  {language === 'vi' ? 'Đang tạo mã QR độ nét cao...' : 'Generating high-res QR codes...'}
+                </span>
               </div>
             ) : labels.length === 0 ? (
               <div className="text-center p-12 text-[#8a8678] text-sm">
-                No furniture items found to print.
+                {t.sidebar.noFurnitureInRoom}
               </div>
             ) : (
               <div
@@ -253,7 +259,7 @@ export function QRLabelModal() {
 
                         {/* Item count badge */}
                         <div className="px-2 py-0.5 bg-[#8a9a5b]/15 text-[#5e6c38] font-bold text-[10px] rounded-full shrink-0 print:border print:border-black print:text-black">
-                          {label.items.length} item{label.items.length === 1 ? '' : 's'}
+                          {label.items.length} {t.common.items.toLowerCase()}
                         </div>
                       </div>
 
@@ -274,11 +280,11 @@ export function QRLabelModal() {
                           {labelStyle === 'detailed' && (
                             <div className="flex flex-col gap-1">
                               <span className="text-[9px] font-bold uppercase tracking-wider text-[#8a8678] print:text-black">
-                                Stored Items:
+                                {t.qrLabelModal.storedItemsLabel}
                               </span>
                               {label.items.length === 0 ? (
                                 <span className="text-[11px] text-[#a39f90] italic print:text-gray-600">
-                                  Empty container
+                                  {t.qrLabelModal.emptyContainer}
                                 </span>
                               ) : (
                                 <ul className="text-[11px] text-[#4a4a38] space-y-0.5 max-h-20 overflow-hidden print:text-black">
@@ -295,7 +301,7 @@ export function QRLabelModal() {
                                   ))}
                                   {label.items.length > 4 && (
                                     <li className="text-[9px] text-[#8a8678] font-semibold print:text-black">
-                                      + {label.items.length - 4} more items...
+                                      + {label.items.length - 4} {t.qrLabelModal.moreItems}
                                     </li>
                                   )}
                                 </ul>
@@ -306,17 +312,17 @@ export function QRLabelModal() {
                           {labelStyle === 'standard' && (
                             <div className="flex flex-col gap-1">
                               <span className="text-[10px] text-[#8a8678] print:text-black">
-                                Scan with any phone camera to reveal full inventory & contents.
+                                {t.qrLabelModal.scanWithPhone}
                               </span>
                               <span className="text-[9px] font-mono text-[#a39f90] uppercase mt-1 print:text-black">
-                                Type: {label.furniture.type}
+                                {t.furniturePresets[label.furniture.type]?.label || label.furniture.type}
                               </span>
                             </div>
                           )}
 
                           {labelStyle === 'compact' && (
                             <div className="text-[10px] text-[#8a8678] leading-tight print:text-black">
-                              Scan to inspect items
+                              {t.qrLabelModal.scanToInspect}
                             </div>
                           )}
                         </div>
@@ -332,15 +338,15 @@ export function QRLabelModal() {
                         <div className="flex items-center gap-1 print:hidden">
                           <button
                             onClick={() => handleCopyLink(idx, label.deepLink)}
-                            title="Copy link"
+                            title={t.common.copied}
                             className="p-1 text-[#8a8678] hover:text-[#4a4a38] hover:bg-[#f5f3ee] rounded transition-colors flex items-center gap-0.5"
                           >
                             {copiedIndex === idx ? <Check size={11} className="text-green-600" /> : <Copy size={11} />}
-                            <span className="text-[9px]">{copiedIndex === idx ? 'Copied' : 'Link'}</span>
+                            <span className="text-[9px]">{copiedIndex === idx ? t.common.copied : t.common.link}</span>
                           </button>
                           <button
                             onClick={() => handleDownloadSinglePNG(label)}
-                            title="Download PNG for label printer"
+                            title="Download PNG"
                             className="p-1 text-[#8a8678] hover:text-[#4a4a38] hover:bg-[#f5f3ee] rounded transition-colors flex items-center gap-0.5"
                           >
                             <Download size={11} />
@@ -360,14 +366,14 @@ export function QRLabelModal() {
             <div className="flex items-center gap-1.5 text-[11px]">
               <Sparkles size={13} className="text-[#8a9a5b]" />
               <span>
-                Tip: Works with standard sticker paper (e.g. Avery sheets) or thermal Bluetooth label makers!
+                {t.qrLabelModal.printingTip}
               </span>
             </div>
             <button
               onClick={handlePrint}
               className="px-4 py-2 bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all"
             >
-              <Printer size={14} /> Print Now
+              <Printer size={14} /> {t.qrLabelModal.printNow}
             </button>
           </div>
         </motion.div>

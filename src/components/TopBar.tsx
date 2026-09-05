@@ -1,11 +1,13 @@
 "use client";
 
 import { useStore } from '@/src/store/useStore';
-import { Search, Sparkles, QrCode } from 'lucide-react';
+import { getTranslation } from '@/src/lib/translations';
+import { Search, Sparkles, QrCode, Menu, Globe } from 'lucide-react';
 import { useEffect } from 'react';
 
 export function TopBar() {
-  const { rooms, activeRoomId } = useStore();
+  const { rooms, activeRoomId, language, setLanguage } = useStore();
+  const t = getTranslation(language);
   const activeRoom = rooms.find(r => r.id === activeRoomId);
 
   // Custom events for modals
@@ -21,6 +23,10 @@ export function TopBar() {
     window.dispatchEvent(new CustomEvent('open-batch-qr', { detail: activeRoomId }));
   };
 
+  const openMobileSidebar = () => {
+    window.dispatchEvent(new CustomEvent('open-mobile-sidebar'));
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -33,44 +39,64 @@ export function TopBar() {
   }, []);
 
   return (
-    <div className="h-14 border-b border-[#e5e1d8] bg-[#f9f7f2] flex items-center justify-between px-6 z-10 shadow-sm shrink-0">
-      <div className="flex items-center gap-3">
-        <h2 className="text-base font-bold text-[#4a4a38]" style={{ fontFamily: 'Georgia, serif' }}>
+    <div className="h-14 border-b border-[#e5e1d8] bg-[#f9f7f2] flex items-center justify-between px-3 sm:px-5 z-10 shadow-sm shrink-0 gap-2">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+        {/* Mobile menu trigger */}
+        <button
+          onClick={openMobileSidebar}
+          className="md:hidden p-2 text-[#4a4a38] hover:bg-[#f1eee6] rounded-xl transition-colors shrink-0"
+          title="Open rooms menu"
+        >
+          <Menu size={20} />
+        </button>
+
+        <h2 className="text-sm sm:text-base font-bold text-[#4a4a38] truncate" style={{ fontFamily: 'Georgia, serif' }}>
           {activeRoom ? activeRoom.name : 'RoomFindable'}
         </h2>
         {activeRoom && (
-          <span className="text-xs text-[#a39f90]">
+          <span className="text-[10px] sm:text-xs text-[#8a8678] shrink-0 bg-[#ece8df]/70 px-2 py-0.5 rounded-md font-medium">
             {activeRoom.width}m × {activeRoom.depth}m
           </span>
         )}
       </div>
-      <div className="flex items-center gap-2">
+
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* Language Switcher */}
+        <button
+          onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
+          className="flex items-center gap-1 px-2.5 py-1.5 bg-white hover:bg-[#f1eee6] text-[#4a4a38] rounded-lg text-xs font-semibold border border-[#d6d1c2] transition-colors shadow-2xs shrink-0"
+          title={language === 'vi' ? 'Chuyển sang English' : 'Switch to Vietnamese'}
+        >
+          <Globe size={13} className="text-[#8a9a5b]" />
+          <span className="font-bold">{language === 'vi' ? 'VN' : 'EN'}</span>
+        </button>
+
         <button
           onClick={openBatchQR}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#4a4a38] rounded-lg text-xs font-semibold border border-[#d6d1c2] transition-colors shadow-sm"
-          title="Print QR Stickers for storage containers"
+          className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#4a4a38] rounded-lg text-xs font-semibold border border-[#d6d1c2] transition-colors shadow-sm shrink-0"
+          title={t.topbar.printQR}
         >
           <QrCode size={13} className="text-[#8a9a5b]" />
-          <span className="hidden sm:inline">Print QR Stickers</span>
-          <span className="sm:hidden">QR Labels</span>
+          <span className="hidden xl:inline">{t.topbar.printQR}</span>
         </button>
 
         <button
           onClick={openWelcome}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#7a8c4b] hover:text-[#5f6f36] rounded-lg text-xs font-semibold border border-[#d6d1c2] transition-colors shadow-sm"
-          title="Open Quick Guide & Demo Room"
+          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#7a8c4b] hover:text-[#5f6f36] rounded-lg text-xs font-semibold border border-[#d6d1c2] transition-colors shadow-sm shrink-0"
+          title={t.topbar.guideDemo}
         >
           <Sparkles size={13} className="text-[#8a9a5b]" />
-          <span>Guide & Demo</span>
+          <span className="hidden lg:inline">{t.topbar.guideDemo}</span>
         </button>
 
         <button
           onClick={openSearch}
-          className="flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#a39f90] hover:text-[#4a4a38] rounded-lg text-sm border border-[#d6d1c2] transition-colors shadow-sm"
+          className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 bg-white hover:bg-[#f1eee6] text-[#a39f90] hover:text-[#4a4a38] rounded-lg text-xs sm:text-sm border border-[#d6d1c2] transition-colors shadow-sm shrink-0"
+          title={t.topbar.searchPlaceholder}
         >
           <Search size={14} />
-          <span>Search...</span>
-          <kbd className="ml-1 px-1.5 py-0.5 bg-[#f1eee6] rounded text-[10px] text-[#8a8678] border border-[#d6d1c2] font-mono">⌘K</kbd>
+          <span className="hidden lg:inline">{t.topbar.searchPlaceholder}</span>
+          <kbd className="hidden sm:inline ml-0.5 px-1.5 py-0.5 bg-[#f1eee6] rounded text-[10px] text-[#8a8678] border border-[#d6d1c2] font-mono">⌘K</kbd>
         </button>
       </div>
     </div>

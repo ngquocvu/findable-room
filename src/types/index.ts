@@ -33,6 +33,8 @@ export interface Furniture {
 
 export type ItemCategory = 'clothing' | 'documents' | 'electronics' | 'tools' | 'books' | 'kitchenware' | 'toys' | 'misc';
 
+export type Language = 'vi' | 'en';
+
 export interface StoredItem {
   id: string;
   furnitureId: string;
@@ -48,4 +50,5 @@ export interface AppState {
   items: StoredItem[];
   activeRoomId: string | null;
   activeFurnitureId: string | null;
+  language: Language;
 }

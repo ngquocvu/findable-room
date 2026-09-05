@@ -279,9 +279,11 @@ export function FurnitureModel({ furniture, itemCount = 0 }: { furniture: Furnit
   });
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
-    e.stopPropagation(); // prevent OrbitControls from starting orbit
-    if (controls) {
-      (controls as any).enabled = false;
+    if (e.pointerType === 'mouse' || isActive) {
+      e.stopPropagation();
+      if (controls) {
+        (controls as any).enabled = false;
+      }
     }
     // Record start position for drag threshold detection
     dragState.active = true;

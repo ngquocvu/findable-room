@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Room, Furniture, StoredItem, AppState } from '../types';
+import { Room, Furniture, StoredItem, AppState, Language } from '../types';
 
 interface StoreActions {
   addRoom: (room: Room) => void;
@@ -14,9 +14,18 @@ interface StoreActions {
   setActiveRoom: (id: string | null) => void;
   setActiveFurniture: (id: string | null) => void;
   importData: (data: AppState) => void;
+  setLanguage: (lang: Language) => void;
 }
 
 type Store = AppState & StoreActions;
+
+const getInitialLanguage = (): Language => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('roomfindable_lang');
+    if (saved === 'en' || saved === 'vi') return saved;
+  }
+  return 'vi'; // Default to Vietnamese
+};
 
 export const useStore = create<Store>((set) => ({
   rooms: [],
@@ -24,6 +33,14 @@ export const useStore = create<Store>((set) => ({
   items: [],
   activeRoomId: null,
   activeFurnitureId: null,
+  language: getInitialLanguage(),
+
+  setLanguage: (lang) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('roomfindable_lang', lang);
+    }
+    set({ language: lang });
+  },
 
   addRoom: (room) => set((state) => ({ rooms: [...state.rooms, room], activeRoomId: room.id })),
   updateRoom: (id, updatedRoom) => set((state) => ({

@@ -1,7 +1,7 @@
-import { AppState, Room, Furniture, StoredItem } from '../types';
+import { AppState, Room, Furniture, StoredItem, Language } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
-export function getDemoData(): AppState {
+export function getDemoData(lang: Language = 'vi'): AppState {
   const roomId = uuidv4();
   const deskId = uuidv4();
   const wardrobeId = uuidv4();
@@ -10,9 +10,11 @@ export function getDemoData(): AppState {
   const cabinetId = uuidv4();
   const boxId = uuidv4();
 
+  const isVi = lang === 'vi';
+
   const room: Room = {
     id: roomId,
-    name: 'Cozy Studio & Study',
+    name: isVi ? 'Phòng làm việc & Nghỉ ngơi' : 'Cozy Studio & Study',
     width: 6,
     depth: 6,
     height: 2.8,
@@ -24,7 +26,7 @@ export function getDemoData(): AppState {
     {
       id: deskId,
       roomId: roomId,
-      name: 'Work Desk',
+      name: isVi ? 'Bàn làm việc' : 'Work Desk',
       type: 'desk',
       position: [-1.75, 0, -1.75],
       rotation: [0, 0, 0],
@@ -34,7 +36,7 @@ export function getDemoData(): AppState {
     {
       id: wardrobeId,
       roomId: roomId,
-      name: 'Main Wardrobe',
+      name: isVi ? 'Tủ quần áo chính' : 'Main Wardrobe',
       type: 'wardrobe',
       position: [1.8, 0, -2.0],
       rotation: [0, 0, 0],
@@ -44,7 +46,7 @@ export function getDemoData(): AppState {
     {
       id: shelfId,
       roomId: roomId,
-      name: 'Bookshelf',
+      name: isVi ? 'Kệ sách' : 'Bookshelf',
       type: 'shelf',
       position: [-2.2, 0, 1.2],
       rotation: [0, Math.PI / 2, 0],
@@ -54,7 +56,7 @@ export function getDemoData(): AppState {
     {
       id: bedId,
       roomId: roomId,
-      name: 'Comfort Bed',
+      name: isVi ? 'Giường ngủ' : 'Comfort Bed',
       type: 'bed',
       position: [1.6, 0, 1.4],
       rotation: [0, 0, 0],
@@ -64,7 +66,7 @@ export function getDemoData(): AppState {
     {
       id: cabinetId,
       roomId: roomId,
-      name: 'Coffee & Snack Cabinet',
+      name: isVi ? 'Tủ cà phê & Đồ uống' : 'Coffee & Snack Cabinet',
       type: 'cabinet',
       position: [-0.2, 0, -2.2],
       rotation: [0, 0, 0],
@@ -74,7 +76,7 @@ export function getDemoData(): AppState {
     {
       id: boxId,
       roomId: roomId,
-      name: 'Storage Box',
+      name: isVi ? 'Thùng lưu trữ' : 'Storage Box',
       type: 'box',
       position: [2.2, 0, -0.6],
       rotation: [0, 0, 0],
@@ -91,129 +93,129 @@ export function getDemoData(): AppState {
       name: 'MacBook Pro 16"',
       category: 'electronics',
       quantity: 1,
-      tags: ['apple', 'laptop', 'work', 'computer'],
+      tags: isVi ? ['apple', 'laptop', 'công việc', 'máy tính'] : ['apple', 'laptop', 'work', 'computer'],
     },
     {
       id: uuidv4(),
       furnitureId: deskId,
-      name: 'USB-C Fast Charger & Cable',
+      name: isVi ? 'Củ sạc nhanh USB-C & Dây sạc' : 'USB-C Fast Charger & Cable',
       category: 'electronics',
       quantity: 2,
-      tags: ['charger', 'cable', 'power'],
+      tags: isVi ? ['sạc', 'dây cáp', 'nguồn'] : ['charger', 'cable', 'power'],
     },
     {
       id: uuidv4(),
       furnitureId: deskId,
-      name: 'Sony WH-1000XM5 Headphones',
+      name: isVi ? 'Tai nghe Sony WH-1000XM5' : 'Sony WH-1000XM5 Headphones',
       category: 'electronics',
       quantity: 1,
-      tags: ['audio', 'music', 'headphones', 'sony'],
+      tags: isVi ? ['âm thanh', 'tai nghe', 'nhạc', 'sony'] : ['audio', 'music', 'headphones', 'sony'],
     },
     {
       id: uuidv4(),
       furnitureId: deskId,
-      name: 'Moleskine Journal & Gel Pen',
+      name: isVi ? 'Sổ tay Moleskine & Bút ký' : 'Moleskine Journal & Gel Pen',
       category: 'misc',
       quantity: 1,
-      tags: ['notebook', 'planner', 'writing', 'pen'],
+      tags: isVi ? ['sổ', 'ghi chép', 'viết', 'bút'] : ['notebook', 'planner', 'writing', 'pen'],
     },
 
     // Wardrobe items
     {
       id: uuidv4(),
       furnitureId: wardrobeId,
-      name: 'North Face Winter Down Jacket',
+      name: isVi ? 'Áo phao mùa đông The North Face' : 'North Face Winter Down Jacket',
       category: 'clothing',
       quantity: 1,
-      tags: ['coat', 'jacket', 'winter', 'clothes'],
+      tags: isVi ? ['áo khoác', 'mùa đông', 'quần áo'] : ['coat', 'jacket', 'winter', 'clothes'],
     },
     {
       id: uuidv4(),
       furnitureId: wardrobeId,
-      name: 'White Oxford Cotton Shirts',
+      name: isVi ? 'Áo sơ mi trắng Oxford' : 'White Oxford Cotton Shirts',
       category: 'clothing',
       quantity: 4,
-      tags: ['shirt', 'formal', 'work', 'clothes'],
+      tags: isVi ? ['áo sơ mi', 'công sở', 'quần áo'] : ['shirt', 'formal', 'work', 'clothes'],
     },
     {
       id: uuidv4(),
       furnitureId: wardrobeId,
-      name: 'Merino Wool Warm Blanket',
+      name: isVi ? 'Chăn len lông cừu Merino ấm áp' : 'Merino Wool Warm Blanket',
       category: 'clothing',
       quantity: 1,
-      tags: ['blanket', 'wool', 'bedding'],
+      tags: isVi ? ['chăn', 'len', 'phòng ngủ'] : ['blanket', 'wool', 'bedding'],
     },
 
     // Shelf items
     {
       id: uuidv4(),
       furnitureId: shelfId,
-      name: 'Sci-Fi Hardcover Book Set',
+      name: isVi ? 'Bộ sách tiểu thuyết khoa học viễn tưởng' : 'Sci-Fi Hardcover Book Set',
       category: 'books',
       quantity: 6,
-      tags: ['books', 'reading', 'novel', 'scifi'],
+      tags: isVi ? ['sách', 'đọc sách', 'tiểu thuyết'] : ['books', 'reading', 'novel', 'scifi'],
     },
     {
       id: uuidv4(),
       furnitureId: shelfId,
-      name: 'Fujifilm X-T5 & 35mm F1.4 Lens',
+      name: isVi ? 'Máy ảnh Fujifilm X-T5 & Ống kính 35mm F1.4' : 'Fujifilm X-T5 & 35mm F1.4 Lens',
       category: 'electronics',
       quantity: 1,
-      tags: ['camera', 'photo', 'fujifilm', 'gadget'],
+      tags: isVi ? ['máy ảnh', 'chụp hình', 'fujifilm'] : ['camera', 'photo', 'fujifilm', 'gadget'],
     },
     {
       id: uuidv4(),
       furnitureId: shelfId,
-      name: 'Passport & Important Document Folder',
+      name: isVi ? 'Hộ chiếu & Túi hồ sơ quan trọng' : 'Passport & Important Document Folder',
       category: 'documents',
       quantity: 1,
-      tags: ['passport', 'documents', 'important', 'travel'],
+      tags: isVi ? ['hộ chiếu', 'giấy tờ', 'quan trọng', 'du lịch'] : ['passport', 'documents', 'important', 'travel'],
     },
 
     // Bed items
     {
       id: uuidv4(),
       furnitureId: bedId,
-      name: 'Contour Memory Foam Pillow',
+      name: isVi ? 'Gối cao su non Memory Foam' : 'Contour Memory Foam Pillow',
       category: 'misc',
       quantity: 2,
-      tags: ['pillow', 'sleep', 'comfort'],
+      tags: isVi ? ['gối', 'ngủ', 'êm ái'] : ['pillow', 'sleep', 'comfort'],
     },
 
     // Cabinet items
     {
       id: uuidv4(),
       furnitureId: cabinetId,
-      name: 'Ethiopia Yirgacheffe Coffee Beans',
+      name: isVi ? 'Hạt cà phê Ethiopia Yirgacheffe' : 'Ethiopia Yirgacheffe Coffee Beans',
       category: 'kitchenware',
       quantity: 1,
-      tags: ['coffee', 'beans', 'drinks', 'breakfast'],
+      tags: isVi ? ['cà phê', 'đồ uống', 'pha chế'] : ['coffee', 'beans', 'drinks', 'breakfast'],
     },
     {
       id: uuidv4(),
       furnitureId: cabinetId,
-      name: 'Comprehensive First Aid Kit',
+      name: isVi ? 'Hộp sơ cứu y tế gia đình' : 'Comprehensive First Aid Kit',
       category: 'misc',
       quantity: 1,
-      tags: ['medicine', 'firstaid', 'health', 'emergency'],
+      tags: isVi ? ['thuốc', 'y tế', 'sơ cứu', 'khẩn cấp'] : ['medicine', 'firstaid', 'health', 'emergency'],
     },
 
     // Storage Box items
     {
       id: uuidv4(),
       furnitureId: boxId,
-      name: 'Catan & Carcassonne Board Games',
+      name: isVi ? 'Bộ trò chơi boardgame Catan & Carcassonne' : 'Catan & Carcassonne Board Games',
       category: 'toys',
       quantity: 2,
-      tags: ['games', 'fun', 'entertainment', 'catan'],
+      tags: isVi ? ['trò chơi', 'giải trí', 'boardgame'] : ['games', 'fun', 'entertainment', 'catan'],
     },
     {
       id: uuidv4(),
       furnitureId: boxId,
-      name: 'Rechargeable AA & AAA Batteries',
+      name: isVi ? 'Hộp pin sạc AA & AAA' : 'Rechargeable AA & AAA Batteries',
       category: 'tools',
       quantity: 12,
-      tags: ['battery', 'power', 'utility', 'rechargeable'],
+      tags: isVi ? ['pin', 'tiện ích', 'sạc lại'] : ['battery', 'power', 'utility', 'rechargeable'],
     },
   ];
 
@@ -223,5 +225,6 @@ export function getDemoData(): AppState {
     items,
     activeRoomId: roomId,
     activeFurnitureId: null,
+    language: lang,
   };
 }

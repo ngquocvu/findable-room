@@ -8,6 +8,7 @@ import { FurnitureType, ItemCategory, StoredItem } from '@/src/types';
 import { X, Search, MapPin, Eye, Download, Check, Plus, Tag } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { v4 as uuidv4 } from 'uuid';
+import { getTranslation } from '@/src/lib/translations';
 
 const CATEGORY_ICONS: Record<string, string> = {
   clothing: '👕',
@@ -36,7 +37,9 @@ export function MobileScanViewModal() {
     addRoom,
     addFurniture,
     addItem,
+    language,
   } = useStore();
+  const t = getTranslation(language);
 
   useEffect(() => {
     const deepLinkInfo = parseContainerDeepLink();
@@ -96,7 +99,7 @@ export function MobileScanViewModal() {
     if (!targetRoom) {
       targetRoom = {
         id: snapshot.roomId || uuidv4(),
-        name: snapshot.roomName || 'Scanned Room',
+        name: snapshot.roomName || (language === 'vi' ? 'Phòng quét' : 'Scanned Room'),
         width: 5,
         depth: 5,
         height: 2.8,
@@ -167,13 +170,13 @@ export function MobileScanViewModal() {
               </div>
               <div>
                 <span className="text-[10px] font-bold text-[#8a9a5b] uppercase tracking-wider">
-                  QR Scanned Box
+                  {t.mobileScanModal.scannedBoxBadge}
                 </span>
                 <h3 className="text-lg font-bold text-[#323223] leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
                   {snapshot.furnitureName}
                 </h3>
                 <div className="text-xs text-[#8a8678] flex items-center gap-1 mt-0.5">
-                  <MapPin size={12} /> {snapshot.roomName} · {snapshot.items.length} items
+                  <MapPin size={12} /> {snapshot.roomName} · {snapshot.items.length} {t.common.items.toLowerCase()}
                 </div>
               </div>
             </div>
@@ -191,7 +194,7 @@ export function MobileScanViewModal() {
             <Search size={14} className="text-[#a39f90] ml-1" />
             <input
               type="text"
-              placeholder="Search items in this container..."
+              placeholder={t.mobileScanModal.searchInBox}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="w-full bg-transparent text-xs text-[#4a4a38] placeholder-[#a39f90] outline-none"
@@ -207,7 +210,7 @@ export function MobileScanViewModal() {
           <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 bg-[#fdfcf9]">
             {filteredItems.length === 0 ? (
               <div className="p-8 text-center text-xs text-[#8a8678]">
-                {query ? 'No items match your search.' : 'This container is currently empty.'}
+                {query ? t.mobileScanModal.noMatchingScanned : t.mobileScanModal.emptyScanned}
               </div>
             ) : (
               filteredItems.map((item, i) => (
@@ -224,7 +227,7 @@ export function MobileScanViewModal() {
                       )}
                     </div>
                     <div className="text-[10px] text-[#a39f90] uppercase tracking-wide mt-1 flex items-center gap-1.5 flex-wrap">
-                      <Tag size={9} /> {item.category}
+                      <Tag size={9} /> {t.categories[item.category as ItemCategory] || item.category}
                       {item.tags && item.tags.length > 0 && (
                         <span className="text-[#8a8678]">· {item.tags.join(', ')}</span>
                       )}
@@ -241,7 +244,7 @@ export function MobileScanViewModal() {
               onClick={handleViewIn3D}
               className="w-full py-2.5 px-4 bg-[#8a9a5b] hover:bg-[#7a8a4b] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all"
             >
-              <Eye size={14} /> Open in 3D Room Viewer
+              <Eye size={14} /> {t.mobileScanModal.openIn3D}
             </button>
 
             {!imported && (
@@ -249,13 +252,13 @@ export function MobileScanViewModal() {
                 onClick={handleImportSnapshot}
                 className="w-full py-2 px-4 bg-[#f5f3ee] hover:bg-[#ede9df] text-[#4a4a38] border border-[#d6d1c2] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
               >
-                <Download size={13} /> Save Container to My RoomFindable
+                <Download size={13} /> {t.mobileScanModal.saveContainer}
               </button>
             )}
 
             {imported && (
               <div className="text-center text-[11px] text-[#5e6c38] font-semibold flex items-center justify-center gap-1">
-                <Check size={13} /> Saved to your rooms!
+                <Check size={13} /> {t.mobileScanModal.savedSuccess}
               </div>
             )}
           </div>
