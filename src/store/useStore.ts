@@ -14,6 +14,7 @@ interface StoreActions {
   setActiveRoom: (id: string | null) => void;
   setActiveFurniture: (id: string | null) => void;
   importData: (data: AppState) => void;
+  addDemoRoom: (demo: AppState) => void;
   setLanguage: (lang: Language) => void;
 }
 
@@ -79,4 +80,23 @@ export const useStore = create<Store>((set) => ({
   setActiveFurniture: (id) => set({ activeFurnitureId: id }),
 
   importData: (data) => set({ ...data }),
+
+  addDemoRoom: (demo) => {
+    const demoRoom = demo.rooms[0];
+    if (!demoRoom) return;
+    set((state) => {
+      const sameNameCount = state.rooms.filter((r) => r.name.startsWith(demoRoom.name)).length;
+      const finalRoom = {
+        ...demoRoom,
+        name: sameNameCount > 0 ? `${demoRoom.name} (${sameNameCount + 1})` : demoRoom.name,
+      };
+      return {
+        rooms: [...state.rooms, finalRoom],
+        furniture: [...state.furniture, ...demo.furniture],
+        items: [...state.items, ...demo.items],
+        activeRoomId: finalRoom.id,
+        activeFurnitureId: null,
+      };
+    });
+  },
 }));

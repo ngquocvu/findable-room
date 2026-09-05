@@ -10,7 +10,7 @@ import { getTranslation } from '@/src/lib/translations';
 export function WelcomeModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
-  const { importData, rooms, addRoom, setActiveRoom, language } = useStore();
+  const { addDemoRoom, rooms, addRoom, setActiveRoom, language } = useStore();
   const t = getTranslation(language);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export function WelcomeModal() {
 
   const handleLoadDemo = () => {
     const demo = getDemoData(language);
-    importData(demo);
+    addDemoRoom(demo);
     localStorage.setItem('roomfindable_welcomed', 'true');
     setIsOpen(false);
   };

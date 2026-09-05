@@ -14,7 +14,7 @@ export function Sidebar() {
   const {
     rooms, activeRoomId, setActiveRoom, addRoom, deleteRoom, updateRoom,
     furniture, addFurniture, setActiveFurniture, activeFurnitureId, deleteFurniture,
-    updateFurniture, importData, items, language
+    updateFurniture, importData, addDemoRoom, items, language
   } = store;
 
   const t = getTranslation(language);
@@ -197,21 +197,38 @@ export function Sidebar() {
                   </div>
                 );
               })}
-              <div className="flex gap-2 mt-1">
+              <div className="flex flex-col gap-2 mt-2">
+                {/* 1. New Empty Room Button */}
                 <button
                   onClick={handleAddRoom}
                   aria-label={t.sidebar.newRoom}
-                  className="flex-1 p-2.5 rounded-lg border border-dashed border-[#d6d1c2] text-[#a39f90] hover:text-[#8a9a5b] hover:border-[#8a9a5b] hover:bg-[#f5f3ee] flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors"
+                  className="w-full p-2.5 rounded-xl border border-dashed border-[#d6d1c2] hover:border-[#8a9a5b] text-[#6a6658] hover:text-[#4a4a38] hover:bg-[#f5f3ee] flex items-center justify-center gap-2 text-xs font-semibold transition-all shadow-2xs"
                 >
-                  <Plus size={13} /> {t.sidebar.newRoom}
+                  <Plus size={14} aria-hidden="true" className="text-[#8a9a5b]" />
+                  <span>{t.sidebar.newRoom}</span>
                 </button>
+
+                {/* 2. Pre-furnished Sample Room Button */}
                 <button
-                  onClick={() => importData(getDemoData(language))}
-                  title={language === 'vi' ? 'Tải phòng mẫu có sẵn nội thất & đồ đạc' : 'Load sample room with furniture & items'}
-                  aria-label={language === 'vi' ? 'Tải phòng mẫu có sẵn nội thất & đồ đạc' : 'Load sample room with furniture & items'}
-                  className="px-3 p-2.5 rounded-lg border border-[#d6d1c2] text-[#7a8c4b] hover:text-[#5f6f36] hover:border-[#8a9a5b] bg-white hover:bg-[#f2f6ee] flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors shadow-xs"
+                  onClick={() => addDemoRoom(getDemoData(language))}
+                  title={t.sidebar.addDemoRoomTip}
+                  aria-label={t.sidebar.addDemoRoomTip}
+                  className="w-full p-2.5 rounded-xl border border-[#e5e1d8] hover:border-[#8a9a5b] bg-white hover:bg-[#f9f7f2] flex items-center justify-between transition-all group shadow-2xs text-left"
                 >
-                  <Sparkles size={12} className="text-[#8a9a5b]" /> {t.sidebar.demo}
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-7 h-7 rounded-lg bg-[#f2f6ee] text-[#7a8c4b] border border-[#d6d1c2]/60 flex items-center justify-center shrink-0 shadow-xs group-hover:bg-[#8a9a5b] group-hover:text-white transition-colors" aria-hidden="true">
+                      <Sparkles size={13} />
+                    </div>
+                    <div className="min-w-0 flex flex-col">
+                      <span className="text-xs font-semibold text-[#4a4a38] group-hover:text-[#6f7e45] transition-colors truncate">
+                        {t.sidebar.addSampleRoom}
+                      </span>
+                      <span className="text-[10px] text-[#8a8678] truncate">
+                        {t.sidebar.sampleRoomSubtitle}
+                      </span>
+                    </div>
+                  </div>
+                  <Plus size={13} aria-hidden="true" className="text-[#8a9a5b] shrink-0 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all ml-1.5" />
                 </button>
               </div>
             </div>

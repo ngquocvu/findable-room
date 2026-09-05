@@ -48,6 +48,9 @@ export interface TranslationDictionary {
     yourRooms: string;
     newRoom: string;
     demo: string;
+    addSampleRoom: string;
+    sampleRoomSubtitle: string;
+    addDemoRoomTip: string;
     editRoom: string;
     roomNamePlaceholder: string;
     addFurniture: string;
@@ -197,8 +200,11 @@ export const translations: Record<Language, TranslationDictionary> = {
     },
     sidebar: {
       yourRooms: 'Danh sách phòng của bạn',
-      newRoom: 'Thêm phòng mới',
+      newRoom: 'Tạo phòng mới',
       demo: 'Mẫu thử',
+      addSampleRoom: 'Thêm phòng mẫu có sẵn đồ',
+      sampleRoomSubtitle: 'Gồm bàn ghế, tủ kệ & 15 đồ đạc mẫu',
+      addDemoRoomTip: 'Tạo thêm một phòng mẫu có sẵn đồ đạc mà không làm mất phòng hiện có',
       editRoom: 'Chỉnh sửa phòng',
       roomNamePlaceholder: 'Tên phòng...',
       addFurniture: 'Thêm đồ nội thất',
@@ -346,8 +352,11 @@ export const translations: Record<Language, TranslationDictionary> = {
     },
     sidebar: {
       yourRooms: 'Your Rooms',
-      newRoom: 'New Room',
+      newRoom: 'New Empty Room',
       demo: 'Demo',
+      addSampleRoom: 'Add Pre-Furnished Sample Room',
+      sampleRoomSubtitle: 'Includes studio furniture & 15 items',
+      addDemoRoomTip: 'Creates an example room with furniture & items without altering existing rooms',
       editRoom: 'Edit Room',
       roomNamePlaceholder: 'Room Name',
       addFurniture: 'Add Furniture',
